@@ -1,0 +1,65 @@
+{
+  "name": "voting-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vue-cli-service build",
+    "serve": "TAILWIND_MODE=watch vue-cli-service serve",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.2.0-105068",
+    "@heroicons/vue": "^1.0.1",
+    "@walletconnect/web3-provider": "^1.4.1",
+    "blockies": "^0.0.2",
+    "core-js": "^3.14.0",
+    "ethers": "^5.3.1",
+    "sass": "^1.35.2",
+    "sass-loader": "^12.1.0",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^6.1.0",
+    "swiper": "^6.7.5",
+    "tailwindcss": "^2.2.0",
+    "vue": "^3.0.0",
+    "vue-inline-svg": "^3.0.0-beta.3",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0",
+    "web3modal": "^1.9.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/custom-forms": "^0.2.1",
+    "@vue/cli-plugin-babel": "^5.0.0-beta.2",
+    "@vue/cli-plugin-eslint": "^5.0.0-beta.2",
+    "@vue/cli-plugin-router": "^5.0.0-beta.2",
+    "@vue/cli-plugin-vuex": "^5.0.0-beta.2",
+    "@vue/cli-service": "^5.0.0-beta.2",
+    "@vue/compiler-sfc": "^3.1.1",
+    "autoprefixer": "^10.2.6",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.28.0",
+    "eslint-plugin-vue": "^7.11.1",
+    "postcss": "^8.3.5",
+    "postcss-loader": "^6.1.0",
+    "vue-cli-plugin-svg-vue3": "^0.0.1",
+    "vue-loader-v16": "^16.0.0-beta.5.4"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
