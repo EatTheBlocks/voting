@@ -1,11 +1,17 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Home from '@/views/Home.vue'
+import Proposal from '@/views/Proposal.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/proposal/:ipfsHash',
+    name: 'Proposal',
+    component: Proposal
   },
 ]
 
