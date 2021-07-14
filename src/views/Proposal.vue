@@ -1,68 +1,57 @@
 <template>
   <div>
     back
-    ICON by {{ ethShortAddress(proposal.address) }}
+    ICON by {{ ethShortAddress(proposal.author) }}
     <div :style="'color: '+proposal.label.color">{{ proposal.label.text }}</div>
     <h2>{{ proposal.title }}</h2>
-    <p>{{ proposal.description }}</p>
-    <div>{{ endDateAgo(proposal.endDate) }}</div>
-    {{ proposal.status }}
+    <p>{{ proposal.body }}</p>
+    <div>{{ endDateAgo(proposal.end) }}</div>
+    {{ proposal.state }}
 
     <div>
       Votes
-      <VoteCard v-for="vote in votes" :key="vote.address"
-                :address="vote.address"
-                :timestamp="vote.timestamp"
-                :choice="vote.choice"
-                :tokens="vote.tokens"
-                :receipt="vote.receipt"
-      />
-    </div>
-    <div>
-      <h3>Information</h3>
-      Author BLOCKIE {{ ethShortAddress(proposal.address) }} {{ proposal.label.text }}
-      IPFS #{{ proposal.ipfsHash.substring(0, 7) }} icon new page
-      Start date {{ proposal.startDate }}
-      End date {{ proposal.endDate }}
-    </div>
+      <div v-for="vote in votes" :key="vote.author">
+        BLOCKIE {{ vote.author }} {{ vote.choice }} {{ vote.tokens }} {{ vote.receipt }}
+      </div>
+      <div>
+        <h3>Information</h3>
+        Author BLOCKIE {{ ethShortAddress(proposal.author) }} {{ proposal.label.text }}
+        IPFS #{{ proposal.id.substring(0, 7) }} icon new page
+        Start date {{ proposal.start }}
+        End date {{ proposal.end }}
+      </div>
 
-    <div>
-      <h3>Results</h3>
-      YES x TOKENS x%
-      NO x TOKENS x%
+      <div>
+        <h3>Results</h3>
+        YES x TOKENS x%
+        NO x TOKENS x%
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import VoteCard from '@/components/VoteCard'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-
-TimeAgo.addDefaultLocale(en)
-const timeAgo = new TimeAgo('en-US')
-
 let proposal = {
-  ipfsHash: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
-  address: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
+  id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
+  author: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
   label: {color: "blue", text: "Core"},
   title: "Test proposal",
-  description: "This is a test proposal for ETB",
-  startDate: Date.now(),
-  endDate: Date.now() - 24 * 60 * 60 * 1000,
-  status: "Closed",
+  body: "This is a test proposal for ETB",
+  start: Date.now(),
+  end: Date.now() - 24 * 60 * 60 * 1000,
+  state: "Closed",
 }
 
 let votes = [
   {
-    address: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
+    author: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
     timestamp: 1625695452,
     choice: 0,
     tokens: 100,
     receipt: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
   },
   {
-    address: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
+    author: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
     timestamp: 1625695452,
     choice: 1,
     tokens: 200,
@@ -72,35 +61,12 @@ let votes = [
 
 export default {
   name: 'Proposal',
-  components: {
-    VoteCard,
-  },
   data() {
     return {
       proposal: proposal,
       votes: votes,
     }
   },
-  methods: {
-    ethShortAddress(address) {
-      if (address !== undefined && address.length > 0) {
-        return (
-          address.substring(0, 6) +
-          "..." +
-          address.substring(address.length - 4)
-        );
-      }
-      return "unknown address";
-    },
-    endDateAgo(endDate) {
-      const now = Date.now()
-      const text = timeAgo.format(endDate)
-      if (endDate > now) {
-        return "end " + text
-      }
-      return "ended " + text
-    }
-  }
 }
 </script>
 

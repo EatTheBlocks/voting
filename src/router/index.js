@@ -9,7 +9,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/proposal/:ipfsHash',
+    path: '/proposal/:id',
     name: 'Proposal',
     component: Proposal
   },
