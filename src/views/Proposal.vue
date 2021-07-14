@@ -1,15 +1,30 @@
 <template>
   <div>
     <div class="flex space-x-10">
-      <div class="w-9/12">
-        <div>Back</div>
-        <div>{{ proposal.title }}</div>
-        <div>{{ proposal.state }}</div>
-        <div v-html="markdown(proposal.body)"></div>
+      <div class="w-9/12 space-y-5">
+        <div class="flex items-center">
+          <ArrowLeftIcon class="mr-1 h-4 w-4"/>
+          Back
+        </div>
+        <h1 class="mt-5 text-2xl font-bold">{{ proposal.title }}</h1>
+        <div class="inline-block bg-blue-400 rounded-full px-2 py-1 text-sm text-white">{{ proposal.state }}</div>
+        <div v-html="markdown(proposal.body)" class="space-y-5"></div>
         <div class="panel">
           <div class="panel-title">Votes</div>
-          <div class="panel-body" v-for="vote in votes" :key="vote.author">
-            BLOCKIE {{ vote.author }} {{ vote.choice }} {{ vote.tokens }} {{ vote.receipt }}
+          <div class="panel-body p-0 divide-y divide-gray-300">
+            <div class="flex justify-between px-4 py-3" v-for="vote in votes" :key="vote.id">
+              <div class="flex items-center">
+                <Blockie class="rounded-full h-4 w-4 mr-2" :opts="{seed:vote.voter}"></Blockie>
+                {{ ethShortAddress(vote.voter) }}
+              </div>
+              <div>
+                {{ vote.choice }}
+              </div>
+              <div class="flex items-center">
+                {{ vote.tokens }} {{ $TokenName }}
+                <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer" @click="setIsOpen(true, vote.id)"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -22,13 +37,16 @@
               <div class="flex items-center">
                 <Blockie class="rounded-full h-4 w-4 mr-2" :opts="{seed:proposal.author}"></Blockie>
                 {{ ethShortAddress(proposal.author) }}
-                <span class="ml-2 px-1.5 py-0.5 rounded-full border border-gray-200 text-xs">{{ proposal.label.text }}</span>
+                <span class="ml-2 px-1.5 py-0.5 rounded-full border border-gray-200 text-xs">{{
+                    proposal.label.text
+                  }}</span>
               </div>
             </div>
             <div>
               <div>IPFS</div>
               <div class="flex items-center">
-                #{{ proposal.id.substring(0, 7) }}<ExternalLinkIcon class="ml-1 h-4 w-4"/>
+                #{{ proposal.id.substring(0, 7) }}
+                <ExternalLinkIcon class="ml-1 h-4 w-4"/>
               </div>
             </div>
             <div>
@@ -42,7 +60,8 @@
             <div>
               <div>Snapshot</div>
               <div class="flex items-center">
-                123456<ExternalLinkIcon class="ml-1 h-4 w-4"/>
+                12,345,678
+                <ExternalLinkIcon class="ml-1 h-4 w-4"/>
               </div>
             </div>
           </div>
@@ -57,11 +76,29 @@
       </div>
     </div>
   </div>
+  <Dialog :open="isOpen" @close="setIsOpen" class="fixed inset-0 z-10 overflow-hidden flex items-center">
+    <DialogOverlay class="fixed inset-0 bg-black opacity-40"/>
+    <div class="flex flex-col w-full max-w-[440px] overflow-hidden z-20 mx-auto">
+      <div class="panel rounded-lg relative">
+        <div class="absolute top-O right-0 p-5">
+          <button class="outline-none">
+            <XIcon class="h-5 w-5 cursor-pointer" @click="setIsOpen(false)"/>
+          </button>
+        </div>
+        <div class="panel-title rounded-t-lg text-center">Receipt</div>
+        <div class="panel-body bg-white rounded-b-lg">
+          Author {{ modalId }}
+        </div>
+      </div>
+    </div>
+  </Dialog>
 </template>
 
 <script>
 import Blockie from '@/components/Blockie'
-import {ExternalLinkIcon} from '@heroicons/vue/outline'
+import {ArrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
+import {ref} from 'vue'
+import {Dialog, DialogOverlay} from '@headlessui/vue'
 import DOMPurify from 'dompurify'
 import marked from 'marked'
 
@@ -97,13 +134,27 @@ export default {
   name: 'Proposal',
   components: {
     Blockie,
-    ExternalLinkIcon,
+    ArrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon,
+    Dialog, DialogOverlay
   },
   data() {
     return {
       proposal: proposal,
       votes: votes,
     }
+  },
+  setup() {
+    let isOpen = ref(false)
+    let modalId = ref("")
+
+    return {
+      isOpen,
+      modalId,
+      setIsOpen(value, id) {
+        isOpen.value = value
+        modalId.value = id
+      },
+    };
   },
   methods: {
     markdown(text) {
@@ -131,6 +182,7 @@ h1
 
     &.table
       @apply space-y-1
+
       > div
         @apply flex justify-between w-full
 

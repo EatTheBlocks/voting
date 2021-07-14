@@ -6,10 +6,9 @@
         <div class="flex justify-between">
           <div class="flex space-x-2 items-center">
             <div class="h-5 w-5 bg-red-500"></div>
-            <div>{TokenName} by {{ ethShortAddress(proposal.author) }}</div>
-            <div class="border border-gray-200 rounded-full px-2 text-sm" :style="'color: '+proposal.label.color">{{
-                proposal.label.text
-              }}
+            <div>{{ $TokenName }} by {{ ethShortAddress(proposal.author) }}</div>
+            <div class="border border-gray-200 rounded-full px-2 text-sm" :style="'color: '+proposal.label.color">
+              {{ proposal.label.text }}
             </div>
           </div>
           <div class="bg-blue-400 rounded-full px-2 py-1 text-sm text-white">{{ proposal.state }}</div>
