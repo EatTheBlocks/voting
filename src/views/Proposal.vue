@@ -2,19 +2,19 @@
   <div>
     <div class="flex space-x-10">
       <div class="w-9/12 space-y-5">
-        <div class="flex items-center">
+        <router-link :to="{name: 'Home'}" class="flex items-center">
           <ArrowLeftIcon class="mr-1 h-4 w-4"/>
           Back
-        </div>
+        </router-link>
         <h1 class="mt-5 text-2xl font-bold">{{ proposal.title }}</h1>
         <div class="inline-block bg-blue-400 rounded-full px-2 py-1 text-sm text-white">{{ proposal.state }}</div>
-        <div v-html="markdown(proposal.body)" class="space-y-5"></div>
+        <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
         <div class="panel">
           <div class="panel-title">Votes</div>
           <div class="panel-body p-0 divide-y divide-gray-300">
             <div class="flex justify-between px-4 py-3" v-for="vote in votes" :key="vote.id">
               <div class="flex items-center">
-                <Blockie class="rounded-full h-4 w-4 mr-2" :opts="{seed:vote.voter}"></Blockie>
+                <Blockie class="mr-2" :opts="{seed:vote.voter, size:16}"/>
                 {{ ethShortAddress(vote.voter) }}
               </div>
               <div>
@@ -35,7 +35,7 @@
             <div>
               <div>Author</div>
               <div class="flex items-center">
-                <Blockie class="rounded-full h-4 w-4 mr-2" :opts="{seed:proposal.author}"></Blockie>
+                <Blockie class="mr-2" :opts="{seed:proposal.author, size:16}"/>
                 {{ ethShortAddress(proposal.author) }}
                 <span class="ml-2 px-1.5 py-0.5 rounded-full border border-gray-200 text-xs">{{
                     proposal.label.text
@@ -165,9 +165,6 @@ export default {
 </script>
 
 <style lang="stylus">
-h1
-  @apply text-xl text-gray-800
-
 .panel
   @apply border border-gray-300 rounded-md
 

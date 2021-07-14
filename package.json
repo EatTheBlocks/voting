@@ -27,6 +27,7 @@
     "vue": "^3.0.0",
     "vue-inline-svg": "^3.0.0-beta.3",
     "vue-router": "^4.0.0-0",
+    "vue3-jazzicon": "^0.1.2",
     "vuex": "^4.0.0-0",
     "web3modal": "^1.9.3"
   },
