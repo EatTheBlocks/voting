@@ -1,5 +1,6 @@
 <template>
-  <div class="p-5 bg-blue-200">Footer</div>
+  <div></div>
+<!--  <div class="p-5 bg-blue-200">Footer</div>-->
 </template>
 
 <script>

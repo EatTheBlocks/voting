@@ -1,77 +1,72 @@
 <template>
-  <div>
-    <div class="flex space-x-10">
-      <div class="w-9/12 space-y-5">
-        <router-link :to="{name: 'Home'}" class="flex items-center">
-          <ArrowLeftIcon class="mr-1 h-4 w-4"/>
-          Back
-        </router-link>
-        <h1 class="mt-5 text-2xl font-bold">{{ proposal.title }}</h1>
-        <div class="inline-block bg-blue-400 rounded-full px-2 py-1 text-sm text-white">{{ proposal.state }}</div>
-        <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
-        <div class="panel">
-          <div class="panel-title">Votes</div>
-          <div class="panel-body p-0 divide-y divide-gray-300">
-            <div class="flex justify-between px-4 py-3" v-for="vote in votes" :key="vote.id">
-              <div class="flex items-center">
-                <Blockie class="mr-2" :opts="{seed:vote.voter, size:16}"/>
-                {{ ethShortAddress(vote.voter) }}
-              </div>
-              <div>
-                {{ vote.choice }}
-              </div>
-              <div class="flex items-center">
-                {{ vote.tokens }} {{ $TokenName }}
-                <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer" @click="setIsOpen(true, vote.id)"/>
-              </div>
+  <div class="flex max-w-[1012px] mx-auto space-x-10">
+    <div class="w-8/12 space-y-5">
+      <router-link :to="{name: 'Home'}" class="flex items-center font-semibold text-sm">
+        <ArrowNarrowLeftIcon class="mr-1 h-4 w-4"/> Back
+      </router-link>
+      <h1 class="mt-5 text-3xl font-bold">{{ proposal.title }}</h1>
+      <div class="inline-block badge-state">{{ proposal.state }}</div>
+      <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
+      <div class="panel">
+        <div class="panel-title">Votes</div>
+        <div class="panel-body p-0 divide-y divide-main-border">
+          <div class="flex justify-between p-4" v-for="vote in votes" :key="vote.id">
+            <div class="flex items-center">
+              <Blockie class="mr-2" :opts="{seed:vote.voter, size:16}"/>
+              {{ ethShortAddress(vote.voter) }}
+            </div>
+            <div>{{ vote.choice }}</div>
+            <div class="flex items-center">
+              {{ vote.tokens }} {{ $TokenName }}
+              <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer" @click="setIsOpen(true, vote.id)"/>
             </div>
           </div>
         </div>
       </div>
-      <div class="w-3/12 space-y-5">
-        <div class="panel">
-          <div class="panel-title">Information</div>
-          <div class="panel-body table">
-            <div>
-              <div>Author</div>
-              <div class="flex items-center">
-                <Blockie class="mr-2" :opts="{seed:proposal.author, size:16}"/>
-                {{ ethShortAddress(proposal.author) }}
-                <span class="ml-2 px-1.5 py-0.5 rounded-full border border-gray-200 text-xs">{{
-                    proposal.label.text
-                  }}</span>
-              </div>
+    </div>
+    <div class="w-4/12 space-y-5">
+      <div class="panel">
+        <div class="panel-title">Information</div>
+        <div class="panel-body table">
+          <div>
+            <div>Author</div>
+            <div class="flex items-center">
+              <Blockie class="mr-2" :opts="{seed:proposal.author, size:16}"/>
+              {{ ethShortAddress(proposal.author) }}
+              <span class="badge-core ml-2">
+                {{ proposal.label.text }}
+              </span>
             </div>
-            <div>
-              <div>IPFS</div>
-              <div class="flex items-center">
-                #{{ proposal.id.substring(0, 7) }}
-                <ExternalLinkIcon class="ml-1 h-4 w-4"/>
-              </div>
+          </div>
+          <div>
+            <div>IPFS</div>
+            <div class="flex items-center">
+              #{{ proposal.id.substring(0, 7) }}
+              <ExternalLinkIcon class="ml-1 h-4 w-4"/>
             </div>
-            <div>
-              <div>Start date</div>
-              <div>{{ proposal.start }}</div>
-            </div>
-            <div>
-              <div>End date</div>
-              <div>{{ proposal.end }}</div>
-            </div>
-            <div>
-              <div>Snapshot</div>
-              <div class="flex items-center">
-                12,345,678
-                <ExternalLinkIcon class="ml-1 h-4 w-4"/>
-              </div>
+          </div>
+          <div>
+            <div>Start date</div>
+            <div>{{ proposal.start }}</div>
+          </div>
+          <div>
+            <div>End date</div>
+            <div>{{ proposal.end }}</div>
+          </div>
+          <div>
+            <div>Snapshot</div>
+            <div class="flex items-center">
+              12,345,678
+              <ExternalLinkIcon class="ml-1 h-4 w-4"/>
             </div>
           </div>
         </div>
-        <div class="panel">
-          <div class="panel-title">Results</div>
-          <div class="panel-body">
-            YES x TOKENS x%
-            NO x TOKENS x%
-          </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Results</div>
+        <div class="panel-body">
+          YES x TOKENS x%
+          NO x TOKENS x%
         </div>
       </div>
     </div>
@@ -96,7 +91,7 @@
 
 <script>
 import Blockie from '@/components/Blockie'
-import {ArrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
+import {ArrowNarrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
 import {ref} from 'vue'
 import {Dialog, DialogOverlay} from '@headlessui/vue'
 import DOMPurify from 'dompurify'
@@ -106,7 +101,7 @@ let proposal = {
   id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
   author: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
   label: {color: "blue", text: "Core"},
-  title: "Test proposal",
+  title: "YIP-62: Change Two Multisig Signers",
   body: "# Summary\n\nThis proposal is to approve an upgrade for the compensation of Byterose for the next 3 months.\n\n# Abstract\n\n@e: Byterose",
   start: Date.now(),
   end: Date.now() - 24 * 60 * 60 * 1000,
@@ -134,7 +129,7 @@ export default {
   name: 'Proposal',
   components: {
     Blockie,
-    ArrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon,
+    ArrowNarrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon,
     Dialog, DialogOverlay
   },
   data() {
@@ -166,16 +161,16 @@ export default {
 
 <style lang="stylus">
 .panel
-  @apply border border-gray-300 rounded-md
-
-  &-title
-    @apply border-b border-gray-300 bg-gray-100 rounded-t-md font-bold text-lg
+  @apply border border-main-border rounded-md divide-y divide-main-border
 
   &-title, &-body
-    @apply p-4
+    @apply px-4
+
+  &-title
+    @apply bg-main-block rounded-t-md font-bold text-lg text-main-heading py-3
 
   &-body
-    @apply w-full
+    @apply w-full py-5
 
     &.table
       @apply space-y-1
@@ -185,4 +180,7 @@ export default {
 
         div:nth-child(1)
           @apply font-semibold
+
+        div:nth-child(2)
+          @apply text-main-blockText
 </style>

@@ -1,2 +1,29 @@
 @import "scrollbar.styl";
 @import "markdown.styl";
+@import "../fonts/HelveticaNowDisplay/stylesheet.css";
+
+@font-face
+  font-family Calibre
+  src url('@/assets/fonts/Calibre-Medium.woff2') format('woff2'), url('@/assets/fonts/Calibre-Medium.woff') format('woff'), url('@/assets/fonts/Calibre-Medium.ttf') format('truetype')
+  font-weight 500
+  font-style normal
+
+@font-face
+  font-family Calibre
+  src url('@/assets/fonts/Calibre-Semibold.woff2') format('woff2'), url('@/assets/fonts/Calibre-Semibold.woff') format('woff'), url('@/assets/fonts/Calibre-Semibold.ttf') format('truetype')
+  font-weight 600
+  font-style normal
+
+body
+  @apply antialiased leading-normal text-main-text font-medium text-base
+  //font-size 18px
+  font-family Helvetica Now Display,Calibre,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
+
+h1, h2, h3, h4, h5, h6
+  @apply text-main-heading font-semibold
+
+.badge-core
+  @apply px-1 rounded-full border border-main-border text-xs text-main-text
+
+.badge-state
+  @apply bg-purple-500 rounded-full px-2 py-1 text-sm text-white font-semibold

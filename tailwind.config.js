@@ -1,27 +1,37 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-    mode: 'jit',
-    purge: [
-        './public/**/*.html',
-        './src/**/*.{js,jsx,ts,tsx,vue}',
-    ],
-    darkMode: false, // or 'media' or 'class'
-    theme: {
-        extend: {
-            screens: {
-                'xs': '370px',
-            },
-        },
-        colors: {
-            transparent: 'transparent',
-            ...colors,
-        },
+  mode: 'jit',
+  purge: [
+    './public/**/*.html',
+    './src/**/*.{js,jsx,ts,tsx,vue}',
+  ],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {
+      screens: {
+        'xs': '370px',
+      },
     },
-    variants: {
-        extend: {},
+    colors: {
+      transparent: 'transparent',
+      main: {
+        primary: '#0657f9',
+        bg: '#fff',
+        text: '#586069',
+        link: '#111',
+        heading: '#111',
+        border: '#d1d5da',
+        block: '#fff',
+        blockText: '#111',
+      },
+      ...colors,
     },
-    plugins: [
-        require('@tailwindcss/custom-forms'),
-    ],
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [
+    require('@tailwindcss/custom-forms'),
+  ],
 }
