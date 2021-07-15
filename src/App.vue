@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-main-bg">
-    <Header></Header>
+  <div class="content flex flex-col min-h-screen bg-main-bg" :class="darkMode?'dark':'light'">
+    <Header @theme="changeTheme"></Header>
     <div class="flex-grow p-5">
       <router-view />
     </div>
@@ -18,10 +18,17 @@ export default {
     Footer
   },
   data() {
-    return {};
+    return {
+      darkMode: false,
+    };
   },
   mounted() {},
-  methods: {},
+  methods: {
+    changeTheme(darkMode) {
+      this.darkMode = darkMode
+      console.log('A', darkMode)
+    }
+  },
   computed: {},
 };
 </script>
