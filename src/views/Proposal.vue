@@ -2,7 +2,8 @@
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-8/12 space-y-5">
       <router-link :to="{name: 'Home'}" class="flex items-center font-semibold text-sm">
-        <ArrowNarrowLeftIcon class="mr-1 h-4 w-4"/> Back
+        <ArrowNarrowLeftIcon class="mr-1 h-4 w-4"/>
+        Back
       </router-link>
       <h1 class="mt-5 text-3xl font-bold">{{ proposal.title }}</h1>
       <div class="inline-block badge-state">{{ proposal.state }}</div>
@@ -10,15 +11,15 @@
       <div class="panel">
         <div class="panel-title">Votes</div>
         <div class="panel-body p-0 divide-y divide-main-border">
-          <div class="flex justify-between p-4" v-for="vote in votes" :key="vote.id">
+          <div class="flex justify-between p-4 text-sm font-semibold" v-for="vote in votes" :key="vote.id">
             <div class="flex items-center">
-              <Blockie class="mr-2" :opts="{seed:vote.voter, size:16}"/>
+              <Blockie class="mr-2" :opts="{seed:vote.voter, size:14}"/>
               {{ ethShortAddress(vote.voter) }}
             </div>
             <div>{{ vote.choice }}</div>
             <div class="flex items-center">
               {{ vote.tokens }} {{ $TokenName }}
-              <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer" @click="setIsOpen(true, vote.id)"/>
+              <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer text-green-500" @click="setIsOpen(true, vote.id)"/>
             </div>
           </div>
         </div>
@@ -74,14 +75,16 @@
   <Dialog :open="isOpen" @close="setIsOpen" class="fixed inset-0 z-10 overflow-hidden flex items-center">
     <DialogOverlay class="fixed inset-0 bg-black opacity-40"/>
     <div class="flex flex-col w-full max-w-[440px] overflow-hidden z-20 mx-auto">
-      <div class="panel rounded-lg relative">
-        <div class="absolute top-O right-0 p-5">
-          <button class="outline-none">
-            <XIcon class="h-5 w-5 cursor-pointer" @click="setIsOpen(false)"/>
-          </button>
+      <div class="panel overflow-hidden">
+        <div class="panel-title text-center relative">
+          Receipt
+          <div class="absolute top-0 right-0 p-4">
+            <button class="outline-none">
+              <XIcon class="h-5 w-5 cursor-pointer" @click="setIsOpen(false)"/>
+            </button>
+          </div>
         </div>
-        <div class="panel-title rounded-t-lg text-center">Receipt</div>
-        <div class="panel-body bg-white rounded-b-lg">
+        <div class="panel-body bg-white">
           Author {{ modalId }}
         </div>
       </div>
@@ -161,13 +164,13 @@ export default {
 
 <style lang="stylus">
 .panel
-  @apply border border-main-border rounded-md divide-y divide-main-border
+  @apply border border-main-border rounded-md divide-y divide-main-border bg-main-block
 
   &-title, &-body
     @apply px-4
 
   &-title
-    @apply bg-main-block rounded-t-md font-bold text-lg text-main-heading py-3
+    @apply font-bold text-lg text-main-heading py-3
 
   &-body
     @apply w-full py-5
