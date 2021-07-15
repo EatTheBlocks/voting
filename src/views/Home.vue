@@ -1,12 +1,12 @@
 <template>
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-3/12">
-      <div class="border rounded-md divide-y">
-        <div class="p-5 text-center">
-          <img src="@/assets/imgs/logo-etb.png" alt="logo" class="rounded-full h-20 w-20 mx-auto mb-2">
+      <div class="border border-main-border rounded-md divide-y divide-main-border overflow-hidden">
+        <div class="p-5 text-center bg-main-block">
+          <img src="@/assets/imgs/logo-etb.png" alt="logo" class="rounded-full border border-main-border h-20 w-20 mx-auto mb-2">
           <span class="text-lg font-semibold text-main-heading">{{ $AppName }}</span>
         </div>
-        <div class="py-3 text-main-heading">
+        <div class="py-3 text-main-link">
           <div class="py-2 px-5 border-l-[3px] border-gray-800">Proposals</div>
           <div class="py-2 px-5">New proposal</div>
           <div class="py-2 px-5">About</div>
@@ -18,7 +18,7 @@
       <h2 class="font-semibold text-2xl">Proposals</h2>
       <div class="space-y-6 mt-4">
         <div v-for="proposal in proposals" :key="proposal.id" class="p-5 border border-main-border rounded-md">
-          <router-link class="space-y-2" :to="{ name: 'Proposal', params: { id: proposal.id }}">
+          <router-link class="space-y-2 hover:text-main-link" :to="{ name: 'Proposal', params: { id: proposal.id }}">
             <div class="flex justify-between">
               <div class="flex space-x-2 items-center mb-1">
                 <img src="@/assets/imgs/logo-etb.png" alt="logo" class="rounded-full h-6 w-6">
