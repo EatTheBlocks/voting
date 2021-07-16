@@ -1,10 +1,11 @@
 <template>
-  <div class="content flex flex-col min-h-screen bg-main-bg" :class="darkMode?'dark':'light'">
-    <Header @theme="changeTheme"></Header>
+  <div class="content flex flex-col min-h-screen bg-main-bg">
+    <Header></Header>
     <div class="flex-grow p-5">
       <router-view />
     </div>
     <Footer></Footer>
+    <div id="headlessui-portal-root"></div>
   </div>
 </template>
 
@@ -18,17 +19,10 @@ export default {
     Footer
   },
   data() {
-    return {
-      darkMode: false,
-    };
+    return {};
   },
   mounted() {},
-  methods: {
-    changeTheme(darkMode) {
-      this.darkMode = darkMode
-      console.log('A', darkMode)
-    }
-  },
+  methods: {},
   computed: {},
 };
 </script>
