@@ -58,11 +58,11 @@
           </div>
           <div>
             <div>Start date</div>
-            <div>{{ proposal.start }}</div>
+            <div>{{ $d(proposal.start, 'short') }}</div>
           </div>
           <div>
             <div>End date</div>
-            <div>{{ proposal.end }}</div>
+            <div>{{ $d(proposal.end, 'short') }}</div>
           </div>
           <div>
             <div>Snapshot</div>
