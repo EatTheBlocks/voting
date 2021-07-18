@@ -22,10 +22,7 @@
         <div class="panel-title">Membres</div>
         <div class="panel-body divide-y divide-main-border p-0">
           <div class="flex p-4" v-for="member in members" :key="member.address">
-            <div class="flex items-center">
-              <Blockie class="mr-2" :opts="{seed:member.address, size:14}"/>
-              {{ ethShortAddress(member.address) }}
-            </div>
+            <User :address="member.address"></User>
           </div>
         </div>
       </div>
@@ -34,8 +31,6 @@
 </template>
 
 <script>
-import Menu from '@/components/Menu'
-import Blockie from '@/components/Blockie'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
 
 const members = [
@@ -47,8 +42,6 @@ const members = [
 export default {
   name: 'About',
   components: {
-    Menu,
-    Blockie,
     ExternalLinkIcon
   },
   data() {

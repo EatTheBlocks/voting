@@ -18,8 +18,7 @@
           <div class="panel-body p-0 divide-y divide-main-border">
             <div class="flex justify-between p-4" v-for="vote in votes" :key="vote.id">
               <div class="flex items-center">
-                <Blockie class="mr-2" :opts="{seed:vote.voter, size:14}"/>
-                {{ ethShortAddress(vote.voter) }}
+                <User :address="vote.voter"/>
               </div>
               <div>{{ proposal.choices[vote.choice] }}</div>
               <div class="flex items-center">
@@ -39,8 +38,7 @@
           <div>
             <div>Author</div>
             <div class="flex items-center">
-              <Blockie class="mr-2" :opts="{seed:proposal.author, size:16}"/>
-              {{ ethShortAddress(proposal.author) }}
+              <User :address="proposal.author"/>
               <span class="badge-core ml-2">
                 {{ proposal.label.text }}
               </span>
@@ -124,8 +122,6 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie'
-import BackButton from '@/components/BackButton'
 import {ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
 import {ref} from 'vue'
 import {Dialog, DialogOverlay} from '@headlessui/vue'
@@ -167,8 +163,6 @@ let votes = [
 export default {
   name: 'Proposal',
   components: {
-    Blockie,
-    BackButton,
     ExternalLinkIcon, BadgeCheckIcon, XIcon,
     Dialog, DialogOverlay
   },

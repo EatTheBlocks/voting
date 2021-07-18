@@ -32,8 +32,6 @@
 </template>
 
 <script>
-import Menu from '@/components/Menu'
-
 let proposals = [
   {
     id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
@@ -65,9 +63,6 @@ let proposals = [
 
 export default {
   name: 'Home',
-  components: {
-    Menu
-  },
   data() {
     return {
       proposals: proposals

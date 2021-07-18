@@ -21,13 +21,8 @@
 </template>
 
 <script>
-import BackButton from '@/components/BackButton'
-
 export default {
-  name: 'NewProposal',
-  components: {
-    BackButton
-  }
+  name: 'NewProposal'
 }
 </script>
 
