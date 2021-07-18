@@ -1,17 +1,7 @@
 <template>
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-3/12">
-      <div class="border border-main-border rounded-md divide-y divide-main-border overflow-hidden">
-        <div class="p-5 text-center bg-main-block">
-          <img src="@/assets/imgs/logo-etb.png" alt="logo" class="rounded-full border border-main-border h-20 w-20 mx-auto mb-2">
-          <span class="text-lg font-semibold text-main-heading">{{ $AppName }}</span>
-        </div>
-        <div class="py-3 text-main-link">
-          <div class="py-2 px-5 border-l-[3px] border-gray-800">Proposals</div>
-          <div class="py-2 px-5">New proposal</div>
-          <div class="py-2 px-5">About</div>
-        </div>
-      </div>
+      <Menu/>
     </div>
     <div class="w-9/12">
       <div class="text-sm font-semibold">{{ $AppName }}</div>
@@ -42,6 +32,8 @@
 </template>
 
 <script>
+import Menu from '@/components/Menu'
+
 let proposals = [
   {
     id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
@@ -73,6 +65,9 @@ let proposals = [
 
 export default {
   name: 'Home',
+  components: {
+    Menu
+  },
   data() {
     return {
       proposals: proposals

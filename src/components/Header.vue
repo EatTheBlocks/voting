@@ -1,7 +1,7 @@
 <template>
   <div class="py-4 bg-main-primary text-white border-b border-main-border">
     <div class="max-w-[1012px] mx-auto flex justify-between items-center">
-      <div class="text-xl font-semibold">{{ $AppName }} / voting app</div>
+      <router-link :to="{name:'Home'}" class="text-xl font-semibold">{{ $AppName }} / voting app</router-link>
       <div class="flex space-x-2 items-center">
         <div class="flex items-center">
           <!--          <component :is="enabled?'SunIcon':'MoonIcon'" class="h-6 w-6 mr-2" />-->

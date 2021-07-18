@@ -1,0 +1,26 @@
+.panel
+  @apply border border-main-border rounded-md divide-y divide-main-border overflow-hidden
+
+  &-title, &-body, &-footer
+    @apply px-4
+
+  &-title
+    @apply font-bold text-lg text-main-heading py-3 bg-main-block
+
+  &-body
+    @apply w-full py-5
+
+    &.table
+      @apply space-y-1
+
+      > div
+        @apply flex justify-between w-full
+
+        div:nth-child(1)
+          @apply font-semibold
+
+        div:nth-child(2)
+          @apply text-main-blockText
+
+  &-footer
+    @apply text-center py-4 bg-main-block font-semibold

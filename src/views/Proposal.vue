@@ -1,10 +1,7 @@
 <template>
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-8/12 space-y-5">
-      <router-link :to="{name: 'Home'}" class="flex items-center font-semibold text-sm">
-        <ArrowNarrowLeftIcon class="mr-1 h-4 w-4"/>
-        Back
-      </router-link>
+      <BackButton :to="{name: 'Home'}"/>
       <div class="animate-pulse" :class="loader?'':'hidden'">
         <div class="space-y-5">
           <div class="h-8 bg-gray-600 rounded w-5/6"></div>
@@ -128,7 +125,8 @@
 
 <script>
 import Blockie from '@/components/Blockie'
-import {ArrowNarrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
+import BackButton from '@/components/BackButton'
+import {ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
 import {ref} from 'vue'
 import {Dialog, DialogOverlay} from '@headlessui/vue'
 import DOMPurify from 'dompurify'
@@ -170,7 +168,8 @@ export default {
   name: 'Proposal',
   components: {
     Blockie,
-    ArrowNarrowLeftIcon, ExternalLinkIcon, BadgeCheckIcon, XIcon,
+    BackButton,
+    ExternalLinkIcon, BadgeCheckIcon, XIcon,
     Dialog, DialogOverlay
   },
   data() {
@@ -212,30 +211,4 @@ export default {
 </script>
 
 <style lang="stylus">
-.panel
-  @apply border border-main-border rounded-md divide-y divide-main-border overflow-hidden
-
-  &-title, &-body, &-footer
-    @apply px-4
-
-  &-title
-    @apply font-bold text-lg text-main-heading py-3 bg-main-block
-
-  &-body
-    @apply w-full py-5
-
-    &.table
-      @apply space-y-1
-
-      > div
-        @apply flex justify-between w-full
-
-        div:nth-child(1)
-          @apply font-semibold
-
-        div:nth-child(2)
-          @apply text-main-blockText
-
-  &-footer
-    @apply text-center py-4 bg-main-block font-semibold
 </style>
