@@ -35,6 +35,7 @@
 
 <script>
 import {ref} from 'vue'
+import {useStore} from 'vuex'
 import {Switch} from '@headlessui/vue'
 import {SunIcon, MoonIcon} from '@heroicons/vue/outline'
 
@@ -46,22 +47,18 @@ export default {
     MoonIcon,
   },
   setup() {
-    const enabled = ref(false)
+    const store = useStore()
+    store.commit('changeTheme', store.state.darkMode)
+
+    const enabled = ref(store.state.darkMode)
 
     return {enabled}
   },
   methods: {
     changeTheme(darkMode) {
-      if (darkMode) {
-        document.body.classList.add('dark')
-        document.body.classList.remove('light')
-      } else {
-        document.body.classList.remove('dark')
-        document.body.classList.add('light')
-      }
+      this.$store.commit('changeTheme', darkMode)
     }
-  }
-  ,
+  },
 }
 </script>
 

@@ -4,8 +4,8 @@ import router from './router'
 import store from './store'
 import i18n from './i18n'
 import helpers from './mixins/helpers'
-import upperFirst from 'lodash/upperFirst';
-import camelCase from 'lodash/camelCase';
+import upperFirst from 'lodash/upperFirst'
+import camelCase from 'lodash/camelCase'
 import './assets/css/index.styl'
 import 'tailwindcss/tailwind.css'
 
