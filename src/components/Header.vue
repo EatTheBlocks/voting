@@ -25,12 +25,18 @@
           Connect Wallet
         </button>
         <button
+          @click="modalAboutOpen = true"
           class="border border-white px-5 py-3 rounded-full font-semibold text-sm hover:bg-white hover:text-main-primary">
           ?
         </button>
       </div>
     </div>
   </div>
+
+  <ModalAbout
+    :open="modalAboutOpen"
+    @close="modalAboutOpen= false"
+  />
 </template>
 
 <script>
@@ -49,10 +55,14 @@ export default {
   setup() {
     const store = useStore()
     store.commit('changeTheme', store.state.darkMode)
-
     const enabled = ref(store.state.darkMode)
 
-    return {enabled}
+    const modalAboutOpen = ref(false)
+
+    return {
+      enabled,
+      modalAboutOpen,
+    }
   },
   methods: {
     changeTheme(darkMode) {

@@ -3,9 +3,9 @@
     <DialogOverlay class="fixed inset-0 bg-black opacity-40"/>
     <div class="flex flex-col w-full max-w-[440px] overflow-hidden z-20 mx-auto">
       <div class="panel overflow-hidden">
-        <div class="panel-title text-center relative">
+        <div class="panel-title text-center relative text-xl py-5">
           <slot name="header"/>
-          <div class="absolute top-0 right-0 p-4">
+          <div class="absolute top-0 right-0 p-6">
             <button class="outline-none">
               <XIcon class="h-5 w-5 cursor-pointer" @click="$emit('close')"/>
             </button>

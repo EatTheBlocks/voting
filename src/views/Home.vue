@@ -14,9 +14,7 @@
                 <img src="@/assets/imgs/token-etb.png" alt="logo" class="h-5 w-5">
                 <div class="font-semibold text-sm">{{ $TokenName }} by {{ ethShortAddress(proposal.author) }}
                 </div>
-                <div class="badge-core ml-2">
-                  {{ proposal.label.text }}
-                </div>
+                <UiLabel class="badge-core ml-2">{{ proposal.label.text }}</UiLabel>
               </div>
               <UiLabel class="badge-state">{{ proposal.state }}</UiLabel>
             </div>
