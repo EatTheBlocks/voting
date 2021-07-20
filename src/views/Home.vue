@@ -11,14 +11,14 @@
           <router-link class="space-y-2 hover:text-main-link" :to="{ name: 'Proposal', params: { id: proposal.id }}">
             <div class="flex justify-between">
               <div class="flex space-x-2 items-center mb-1">
-                <img src="@/assets/imgs/logo-etb.png" alt="logo" class="rounded-full h-6 w-6">
+                <img src="@/assets/imgs/token-etb.png" alt="logo" class="h-5 w-5">
                 <div class="font-semibold text-sm">{{ $TokenName }} by {{ ethShortAddress(proposal.author) }}
                 </div>
                 <div class="badge-core ml-2">
                   {{ proposal.label.text }}
                 </div>
               </div>
-              <div class="badge-state">{{ proposal.state }}</div>
+              <UiLabel class="badge-state">{{ proposal.state }}</UiLabel>
             </div>
             <h2 class="text-2xl font-semibold">{{ proposal.title }}</h2>
             <p class="text-lg">{{ proposal.body }}</p>
@@ -28,7 +28,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>

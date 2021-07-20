@@ -2,10 +2,10 @@
   <div class="content flex flex-col min-h-screen bg-main-bg">
     <Header></Header>
     <div class="flex-grow p-5">
-      <router-view />
+      <router-view/>
     </div>
     <Footer></Footer>
-    <div id="headlessui-portal-root"></div>
+    <div id="modal"/>
   </div>
 </template>
 
@@ -22,7 +22,8 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {},
   computed: {},
 };

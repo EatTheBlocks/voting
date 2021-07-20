@@ -1,7 +1,14 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
 @import "theme.styl";
 @import "scrollbar.styl";
 @import "panel.styl";
+@import "badge.styl";
 @import "markdown.styl";
+
+@import "tailwindcss/utilities";
+
 @import "../fonts/HelveticaNowDisplay/stylesheet.css";
 
 .content
@@ -10,9 +17,3 @@
 
 h1, h2, h3, h4, h5, h6
   @apply text-main-heading font-semibold
-
-.badge-core
-  @apply px-1 rounded-full border border-main-border text-xs text-main-text
-
-.badge-state
-  @apply bg-purple-500 rounded-full px-2 py-1 text-sm text-white font-semibold

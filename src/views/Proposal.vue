@@ -11,25 +11,9 @@
       </div>
       <div class="space-y-5" :class="loader?'hidden':''">
         <h1 class="mt-5 text-3xl font-bold">{{ proposal.title }}</h1>
-        <div class="inline-block badge-state">{{ proposal.state }}</div>
+        <UiLabel class="inline-block badge-state">{{ proposal.state }}</UiLabel>
         <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
-        <div class="panel">
-          <div class="flex panel-title items-center">Votes <span
-            class="ml-2 px-1 rounded-full text-xs bg-gray-700 text-white mt-0.5">123</span></div>
-          <div class="panel-body p-0 divide-y divide-main-border">
-            <div class="flex justify-between p-4" v-for="vote in votes" :key="vote.id">
-              <div class="flex items-center">
-                <User :address="vote.voter"/>
-              </div>
-              <div>{{ proposal.choices[vote.choice] }}</div>
-              <div class="flex items-center">
-                {{ vote.tokens }} {{ $TokenName }}
-                <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer text-green-500" @click="setIsOpen(true, vote.id)"/>
-              </div>
-            </div>
-          </div>
-          <div class="panel-footer cursor-pointer">See more</div>
-        </div>
+        <BlockVotes :proposal="proposal" :votes="votes" :loaded="true" ></BlockVotes>
       </div>
     </div>
     <div class="w-4/12 space-y-5" :class="loader?'hidden':''">
@@ -40,9 +24,7 @@
             <div>Author</div>
             <div class="flex items-center">
               <User :address="proposal.author"/>
-              <span class="badge-core ml-2">
-                {{ proposal.label.text }}
-              </span>
+              <UiLabel class="badge-core ml-2">{{ proposal.label.text }}</UiLabel>
             </div>
           </div>
           <div>
@@ -86,30 +68,10 @@
       </div>
     </div>
   </div>
-  <Dialog :open="isOpen" @close="setIsOpen" class="fixed inset-0 z-10 overflow-hidden flex items-center">
-    <DialogOverlay class="fixed inset-0 bg-black opacity-40"/>
-    <div class="flex flex-col w-full max-w-[440px] overflow-hidden z-20 mx-auto">
-      <div class="panel overflow-hidden">
-        <div class="panel-title text-center relative">
-          Receipt
-          <div class="absolute top-0 right-0 p-4">
-            <button class="outline-none">
-              <XIcon class="h-5 w-5 cursor-pointer" @click="setIsOpen(false)"/>
-            </button>
-          </div>
-        </div>
-        <div class="panel-body bg-main-bg">
-          Author {{ modalId }}
-        </div>
-      </div>
-    </div>
-  </Dialog>
 </template>
 
 <script>
-import {ExternalLinkIcon, BadgeCheckIcon, XIcon} from '@heroicons/vue/outline'
-import {ref} from 'vue'
-import {Dialog, DialogOverlay} from '@headlessui/vue'
+import {ExternalLinkIcon} from '@heroicons/vue/outline'
 import DOMPurify from 'dompurify'
 import marked from 'marked'
 
@@ -148,8 +110,7 @@ let votes = [
 export default {
   name: 'Proposal',
   components: {
-    ExternalLinkIcon, BadgeCheckIcon, XIcon,
-    Dialog, DialogOverlay
+    ExternalLinkIcon,
   },
   data() {
     return {
@@ -158,19 +119,6 @@ export default {
       loader: false,
       loaderResults: true,
     }
-  },
-  setup() {
-    let isOpen = ref(false)
-    let modalId = ref("")
-
-    return {
-      isOpen,
-      modalId,
-      setIsOpen(value, id) {
-        isOpen.value = value
-        modalId.value = id
-      },
-    };
   },
   mounted() {
     setTimeout(() => {
@@ -188,6 +136,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-</style>
