@@ -4,7 +4,7 @@
       <Menu/>
     </div>
     <div class="w-9/12 space-y-5">
-      <div class="text-lg font-semibold text-main-heading">{{ $AppName }}</div>
+      <div class="text-2xl font-semibold text-main-heading">{{ $AppName }}</div>
       <div class="panel">
         <div class="panel-body space-y-3">
           <h4 class="text-xl">About</h4>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="panel">
-        <div class="panel-title">Membres</div>
+        <div class="panel-title">Members</div>
         <div class="panel-body divide-y divide-main-border p-0">
           <div class="flex p-4" v-for="member in members" :key="member.address">
             <User :address="member.address"></User>

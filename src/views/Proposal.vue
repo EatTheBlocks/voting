@@ -4,9 +4,9 @@
       <BackButton :to="{name: 'Home'}"/>
       <div class="animate-pulse" :class="loader?'':'hidden'">
         <div class="space-y-5">
-          <div class="h-8 bg-gray-600 rounded w-5/6"></div>
-          <div class="h-8 bg-gray-600 rounded w-1/6"></div>
-          <div class="h-8 bg-gray-600 rounded w-2/6"></div>
+          <div class="h-8 bg-main-text rounded w-5/6"></div>
+          <div class="h-8 bg-main-text rounded w-1/6"></div>
+          <div class="h-8 bg-main-text rounded w-2/6"></div>
         </div>
       </div>
       <div class="space-y-5" :class="loader?'hidden':''">
@@ -14,7 +14,8 @@
         <div class="inline-block badge-state">{{ proposal.state }}</div>
         <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
         <div class="panel">
-          <div class="flex panel-title items-center">Votes <span class="ml-2 px-1 rounded-full text-xs bg-gray-700 text-white mt-0.5">123</span></div>
+          <div class="flex panel-title items-center">Votes <span
+            class="ml-2 px-1 rounded-full text-xs bg-gray-700 text-white mt-0.5">123</span></div>
           <div class="panel-body p-0 divide-y divide-main-border">
             <div class="flex justify-between p-4" v-for="vote in votes" :key="vote.id">
               <div class="flex items-center">
@@ -73,29 +74,13 @@
         <div class="panel-body">
           <div class="animate-pulse" :class="loaderResults?'':'hidden'">
             <div class="space-y-3">
-              <div class="h-6 bg-gray-600 rounded w-5/6"></div>
-              <div class="h-6 bg-gray-600 rounded w-3/6"></div>
+              <div class="h-6 bg-main-text rounded w-5/6"></div>
+              <div class="h-6 bg-main-text rounded w-3/6"></div>
             </div>
           </div>
           <div class="space-y-3" :class="loaderResults?'hidden':''">
-            <div class="space-y-2">
-              <div class="flex justify-between">
-                <div>{{ proposal.choices[0] }} 123.25k {{ $TokenName}}</div>
-                <div>40%</div>
-              </div>
-              <div class="bg-main-border w-full h-2 rounded-full relative flex overflow-hidden">
-                <div class="bg-main-progress h-full rounded-full" style="width: 40%"></div>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex justify-between">
-                <div>{{ proposal.choices[1] }} 853.86k {{ $TokenName}}</div>
-                <div>60%</div>
-              </div>
-              <div class="bg-main-border w-full h-2 rounded-full relative flex overflow-hidden">
-                <div class="bg-main-progress h-full rounded-full" style="width: 60%"></div>
-              </div>
-            </div>
+            <UiProgress :text="proposal.choices[0] + ' 123.25k ' + $TokenName" :percent="40"></UiProgress>
+            <UiProgress :text="proposal.choices[1] + ' 853.86k ' + $TokenName" :percent="60"></UiProgress>
           </div>
         </div>
       </div>
