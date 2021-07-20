@@ -1,0 +1,74 @@
+name: Upload website
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup node verison
+        uses: actions/setup-node@v1
+        with:
+          node-version: '15'
+      - name: Build website
+        run: |
+          yarn install
+          yarn build
+      - name: Cache result
+        uses: actions/cache@v2
+        with:
+          key: ${{ github.sha }}
+          path: dist
+
+  ipfs:
+    name: Upload on IPFS
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get cache
+        uses: actions/cache@v2
+        with:
+          path: dist
+          key: ${{ github.sha }}
+      - name: Pin to IPFS
+        id: upload
+        uses: anantaramdas/ipfs-pinata-deploy-action@v1.6.3
+        with:
+          pin-name: ${{ github.repository }}
+          path: dist
+          pinata-api-key: ${{ secrets.PINATA_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_SECRET }}
+          verbose: true
+          remove-old: true
+      # - name: Update DNS with new IPFS hash
+      #   uses: textileio/cloudflare-update-dnslink@v2
+      #   env:
+      #     CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+      #     RECORD_DOMAIN: ${{ secrets.DOMAIN }}
+      #     RECORD_NAME: _dnslink.${{ secrets.SUBDOMAIN }}
+      #     CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      #   with:
+      #     cid: ${{ steps.upload.outputs.hash }}
+      - name: Convert CIDv0 to CIDv1
+        id: convert_cidv0
+        uses: uniswap/convert-cidv0-cidv1@v1.0.0
+        with:
+          cidv0: ${{ steps.upload.outputs.hash }}
+      - name: Result
+        run: |
+          echo "IPFS hash of the deployment:
+          - CIDv0: ${{ steps.upload.outputs.hash }}
+          - CIDv1: ${{ steps.convert_cidv0.outputs.cidv1 }}
+          Preferred URLs:
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+            - ipfs://${{ steps.upload.outputs.hash }}/
+          Other IPFS gateways:
+            - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
+            - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
+            - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/"
