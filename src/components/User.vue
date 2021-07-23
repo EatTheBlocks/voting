@@ -3,7 +3,7 @@
     <UiPopover :options="{ offset: [0, 12], placement: 'bottom-start' }">
       <template #item>
         <a class="whitespace-nowrap cursor-pointer">
-          <UiAvatar class="mr-2" :opts="{seed:address, size:14}"/>
+          <UiAvatar class="mr-2 -mt-0.5" :opts="{seed:address, size:14}"/>
           {{ ethShortAddress(address) }}
         </a>
       </template>

@@ -7,7 +7,7 @@
     </div>
     <div class="py-3 text-main-link menu">
       <router-link :to="{name:'Home'}" class="block py-2 px-5">Proposals</router-link>
-      <router-link :to="{name:'NewProposal'}" class="block py-2 px-5">New proposal</router-link>
+      <router-link :to="{name:'Create'}" class="block py-2 px-5">New proposal</router-link>
       <router-link :to="{name:'About'}" class="block py-2 px-5">About</router-link>
     </div>
   </div>

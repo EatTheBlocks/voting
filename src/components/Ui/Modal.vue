@@ -14,6 +14,9 @@
         <div class="panel-body bg-main-bg text-main-text">
           <slot/>
         </div>
+        <div class="panel-footer" v-if="!!$slots.footer">
+          <slot name="footer"/>
+        </div>
       </div>
     </div>
   </Dialog>
