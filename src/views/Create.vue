@@ -8,13 +8,28 @@
         v-model="form.body"
         placeholder="What is your proposal?"
         class="block outline-none resize-none bg-transparent text-main-link font-semibold w-full h-16 tracking-wider"></TextareaAutosize>
-      <div v-if="form.body.length > 0" class="space-y-5">
+      <div v-if="!!form.body" class="space-y-5">
         <div class="text-xl font-semibold text-main-heading">Preview</div>
         <div v-html="markdown" class="space-y-5 markdown"></div>
       </div>
       <div class="panel">
         <div class="panel-title">Choices</div>
-        <div class="panel-body">YOLO</div>
+        <div class="panel-body">
+          <div class="flex-col space-y-2">
+            <div
+              class="border border-main-border hover:border-main-link rounded-full text-main-link flex justify-between items-center py-1 px-5 font-semibold cursor-pointer"
+              v-for="(choice, i) in choices" :key="i">
+              <div>{{ i + 1 }}</div>
+              <div class="w-full px-2"><input type="text" v-model="choices[i]" class="outline-none w-full text-center h-9 font-semibold text-main-link"></div>
+              <div>
+                <XIcon @click="removeChoice(i)" class="w-4 h-4"/>
+              </div>
+            </div>
+            <div>
+              <UiButton @click="addChoice" class="mt-3">Add choice</UiButton>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="w-4/12 space-y-5">
@@ -49,12 +64,16 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
 import DOMPurify from 'dompurify'
 import marked from 'marked'
+import {XIcon} from '@heroicons/vue/outline'
 
 export default {
   name: 'Create',
+  components: {
+    XIcon,
+  },
   setup() {
     const selectedDate = ref('')
     const form = ref({
@@ -65,6 +84,12 @@ export default {
       end: 0,
     })
 
+    const markdown = computed(() => {
+      return marked(DOMPurify.sanitize(form.value.body))
+    })
+
+    const choices = ref(['', ''])
+
     const modalSelectDateOpen = ref(false)
 
     function setDate(ts) {
@@ -73,16 +98,23 @@ export default {
       }
     }
 
+    function addChoice() {
+      choices.value.push('')
+    }
+
+    function removeChoice(i) {
+      choices.value.splice(i, 1);
+    }
+
     return {
       form,
+      markdown,
       selectedDate,
       modalSelectDateOpen,
       setDate,
-    }
-  },
-  computed: {
-    markdown() {
-      return marked(DOMPurify.sanitize(this.body))
+      choices,
+      addChoice,
+      removeChoice,
     }
   }
 }

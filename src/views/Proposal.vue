@@ -13,7 +13,17 @@
         <h1 class="mt-5 text-3xl font-bold">{{ proposal.title }}</h1>
         <UiLabel class="inline-block badge-state">{{ proposal.state }}</UiLabel>
         <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
-        <BlockVotes :proposal="proposal" :votes="votes" :loaded="true" ></BlockVotes>
+        <div class="panel">
+          <div class="panel-title">Cast your vote</div>
+          <div class="panel-body space-y-2">
+            <UiButton>Accept</UiButton>
+            <UiButton>Reject</UiButton>
+            <div>
+              <UiButton :disabled="true" class="mt-3">Vote</UiButton>
+            </div>
+          </div>
+        </div>
+        <BlockVotes :proposal="proposal" :votes="votes" :loaded="true"></BlockVotes>
       </div>
     </div>
     <div class="w-4/12 space-y-5" :class="loader?'hidden':''">
