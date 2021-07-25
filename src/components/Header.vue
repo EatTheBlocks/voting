@@ -20,10 +20,7 @@
           </span>
           </Switch>
         </div>
-        <button
-          class="border border-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-white hover:text-main-primary">
-          Connect Wallet
-        </button>
+        <Wallet/>
         <button
           @click="modalAboutOpen = true"
           class="border border-white px-5 py-3 rounded-full font-semibold text-sm hover:bg-white hover:text-main-primary">

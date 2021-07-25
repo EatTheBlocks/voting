@@ -2,7 +2,7 @@
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-8/12 space-y-5">
       <BackButton :to="{name: 'Home'}"/>
-      <input type="text" class="block outline-none text-3xl bg-transparent text-main-link font-semibold"
+      <input type="text" class="block w-full outline-none text-3xl bg-transparent text-main-link font-semibold"
              placeholder="Question">
       <TextareaAutosize
         v-model="form.body"
@@ -20,7 +20,7 @@
               class="border border-main-border hover:border-main-link rounded-full text-main-link flex justify-between items-center py-1 px-5 font-semibold cursor-pointer"
               v-for="(choice, i) in choices" :key="i">
               <div>{{ i + 1 }}</div>
-              <div class="w-full px-2"><input type="text" v-model="choices[i]" class="outline-none w-full text-center h-9 font-semibold text-main-link"></div>
+              <div class="w-full px-2"><input type="text" v-model="choices[i]" class="outline-none w-full bg-transparent text-center h-9 font-semibold text-main-link"></div>
               <div>
                 <XIcon @click="removeChoice(i)" class="w-4 h-4"/>
               </div>
@@ -34,7 +34,10 @@
     </div>
     <div class="w-4/12 space-y-5">
       <div class="panel">
-        <div class="panel-title">Actions</div>
+        <div class="panel-title flex justify-between items-center">
+          <span>Actions</span>
+          <SparklesIcon class="w-4 h-4"/>
+        </div>
         <div class="panel-body space-y-3">
           <UiButton
             @click="(modalSelectDateOpen = true), (selectedDate = 'start')"
@@ -67,12 +70,12 @@
 import {ref, computed} from 'vue'
 import DOMPurify from 'dompurify'
 import marked from 'marked'
-import {XIcon} from '@heroicons/vue/outline'
+import {XIcon, SparklesIcon} from '@heroicons/vue/outline'
 
 export default {
   name: 'Create',
   components: {
-    XIcon,
+    XIcon, SparklesIcon,
   },
   setup() {
     const selectedDate = ref('')
