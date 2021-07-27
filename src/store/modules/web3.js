@@ -1,6 +1,6 @@
 import {ethers} from 'ethers'
 
-const provider = new ethers.providers.Web3Provider(window.ethereum)
+export const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 // initial state
 const state = () => ({
