@@ -16,11 +16,11 @@ type Space struct {
 }
 
 func (h handler) GetSpace(c echo.Context) error {
+	ctx := c.Request().Context()
 	collection := h.db.Client().Database("etb-voting-app").Collection("space")
 
 	var space Space
-
-	err := collection.FindOne(c.Request().Context(), bson.D{}).Decode(&space)
+	err := collection.FindOne(ctx, bson.D{}).Decode(&space)
 	if err == mongo.ErrNoDocuments {
 		return c.JSON(http.StatusNotFound, "space not found")
 	} else if err != nil {

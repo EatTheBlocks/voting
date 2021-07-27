@@ -41,6 +41,8 @@ func main() {
 
 	e.GET("/", h.GetSpace)
 	e.POST("/proposal", h.PostProposal)
+	e.GET("/proposals", h.GetProposals)
+	e.GET("/proposal/:id", h.GetProposal)
 
 	e.Logger.Fatal(e.Start(":80"))
 }
