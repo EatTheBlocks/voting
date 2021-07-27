@@ -2,7 +2,7 @@ import {shorten} from '@/helpers/utils'
 import numeral from 'numeral'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import networks from '@snapshot-labs/snapshot.js/src/networks.json'
+import networks from '@/helpers/networks.json'
 
 TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-US')
