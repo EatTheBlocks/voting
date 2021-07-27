@@ -15,26 +15,39 @@
       </div>
       <div class="flex justify-between">
         <div class="font-semibold">Network</div>
-        <div class="text-main-blockText">Binance Smart Chain</div>
+        <div class="text-main-blockText">{{ network }}</div>
       </div>
       <div class="flex justify-between">
         <div class="font-semibold">IPFS</div>
-        <div class="text-main-blockText">cloudflare-ipfs.com</div>
+        <div class="text-main-blockText">{{ ipfsGateway }}</div>
       </div>
       <div class="flex justify-between">
         <div class="font-semibold">Hub</div>
-        <div class="text-main-blockText">https://hub.SERVER</div>
+        <div class="text-main-blockText">{{ hubUrl }}</div>
       </div>
     </div>
   </UiModal>
 </template>
 
 <script>
+import networks from '@snapshot-labs/snapshot.js/src/networks.json'
+
 export default {
   name: 'About',
   props: {
     open: Boolean,
   },
   emits: ['close'],
+  setup() {
+    const network = networks["56"].name
+    const ipfsGateway = process.env.VUE_APP_IPFS_GATEWAY
+    const hubUrl = process.env.VUE_APP_HUB_URL
+
+    return {
+      network,
+      ipfsGateway,
+      hubUrl
+    }
+  }
 }
 </script>

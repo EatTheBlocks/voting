@@ -17,7 +17,7 @@
 
     <template #footer>
       <div class="flex space-x-5">
-        <UiButton>Cancel</UiButton>
+        <UiButton @click="$emit('close')">Cancel</UiButton>
         <UiButton @click="handleSubmit" :disabled="!input">
           <span v-if="step==0">Next</span>
           <span v-else>Select</span>

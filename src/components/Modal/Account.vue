@@ -14,9 +14,12 @@
       </UiButton>
     </div>
     <div class="space-y-3" v-else>
-      <UiButton class="flex justify-center items-center">
-        <User :address="address" :popover="false" class=""/>
-      </UiButton>
+      <a :href="_explorer(56, address)" target="_blank">
+        <UiButton class="flex justify-center items-center">
+          <User :address="address" :popover="false" class=""/>
+          <ExternalLinkIcon class="ml-1 h-4 w-4"/>
+        </UiButton>
+      </a>
       <UiButton class="flex justify-center items-center text-red-500"
                 @click="logout"
       >
@@ -29,9 +32,13 @@
 <script>
 import {computed} from 'vue'
 import {useStore} from 'vuex'
+import {ExternalLinkIcon} from '@heroicons/vue/outline'
 
 export default {
   name: 'Account',
+  components: {
+    ExternalLinkIcon,
+  },
   props: {
     open: Boolean,
   },

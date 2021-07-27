@@ -2,13 +2,13 @@
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-8/12 space-y-5">
       <BackButton :to="{name: 'Home'}"/>
-      <input v-model="form.name" type="text"
+      <input v-model="form.title" type="text"
              class="block w-full outline-none text-3xl bg-transparent text-main-link font-semibold"
              placeholder="Question">
       <TextareaAutosize
         v-model="form.body"
         placeholder="What is your proposal?"
-        class="block outline-none resize-none bg-transparent text-main-link font-semibold w-full h-16 tracking-wider"></TextareaAutosize>
+        class="block outline-none resize-none bg-transparent text-main-link font-semibold w-full h-16 tracking-wider"/>
       <div v-if="!!form.body" class="space-y-5">
         <div class="text-xl font-semibold text-main-heading">Preview</div>
         <div v-html="markdown" class="space-y-5 markdown"></div>
@@ -71,6 +71,8 @@
 
 <script>
 import {ref, computed} from 'vue'
+import {useStore} from 'vuex'
+import axios from 'axios'
 import DOMPurify from 'dompurify'
 import marked from 'marked'
 import {XIcon, SparklesIcon} from '@heroicons/vue/outline'
@@ -82,9 +84,11 @@ export default {
     XIcon, SparklesIcon,
   },
   setup() {
+    const store = useStore()
+
     const selectedDate = ref('')
     const form = ref({
-      name: '',
+      title: '',
       body: '',
       choices: ['', ''],
       start: 0,
@@ -112,7 +116,7 @@ export default {
     }
 
     const isValid = computed(() => {
-      return form.value.name &&
+      return form.value.title &&
         form.value.body &&
         // TODO form.value.body <= bodyLimit
         form.value.choices.length >= 2 &&
@@ -121,21 +125,27 @@ export default {
         form.value.end > form.value.start
     })
 
-    function publish() {
+    async function publish() {
+      const proposal = {
+        author: store.state.web3.address,
+        title: form.value.title,
+        body: form.value.body,
+        choices: form.value.choices,
+        created: Date.now(),
+        start: form.value.start * 1e3,
+        end: form.value.end * 1e3,
+      }
+
       const signer = provider.getSigner()
-      signer.signMessage(JSON.stringify({
-        version: "0.1.0", // TODO
-        timestamp: Date.now(),
-        type: "proposal",
-        payload: {
-          name: form.value.name,
-          body: form.value.body,
-          choices: form.value.choices,
-          start: form.value.start,
-          end: form.value.end,
-        }
-      })).then((signature) => {
-        console.log(signature)
+      const signature = await signer.signMessage(JSON.stringify(proposal))
+
+      axios.post(`${process.env.VUE_APP_HUB_URL}/proposal`, {
+        signature: signature,
+        proposal: proposal,
+      }).then((response) => {
+        console.log(response)
+      }).catch((error) => {
+        console.error(error)
       })
     }
 
@@ -153,7 +163,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
