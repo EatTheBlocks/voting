@@ -1,19 +1,34 @@
 <template>
   <UiModal :open="open" @close="$emit('close')">
-    <template #header>Connect Wallet</template>
+    <template #header>
+      <span v-if="!connected">Connect Wallet</span>
+      <span v-else>Account</span>
+    </template>
 
-    <UiButton class="flex justify-center items-center"
-              @click="connect"
-    >
-      <img src="@/assets/imgs/connectors/metamask.png" class="w-7 h-7 mr-2">
-      <span>MetaMask</span>
-    </UiButton>
+    <div v-if="!connected">
+      <UiButton class="flex justify-center items-center"
+                @click="connect"
+      >
+        <img src="@/assets/imgs/connectors/metamask.png" class="w-7 h-7 mr-2">
+        <span>MetaMask</span>
+      </UiButton>
+    </div>
+    <div class="space-y-3" v-else>
+      <UiButton class="flex justify-center items-center">
+        <User :address="address" :popover="false" class=""/>
+      </UiButton>
+      <UiButton class="flex justify-center items-center text-red-500"
+                @click="logout"
+      >
+        Log out
+      </UiButton>
+    </div>
   </UiModal>
 </template>
 
 <script>
-//import {computed} from 'vue'
-import {ethers} from 'ethers'
+import {computed} from 'vue'
+import {useStore} from 'vuex'
 
 export default {
   name: 'Account',
@@ -22,17 +37,31 @@ export default {
   },
   emits: ['close'],
   setup(props, {emit}) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const store = useStore()
 
     async function connect() {
-      await provider.send("eth_requestAccounts", [])
-      const signer = provider.getSigner()
-      console.log("Account:", await signer.getAddress())
+      await store.dispatch('web3/connect')
       emit('close')
     }
 
+    async function logout() {
+      await store.dispatch('web3/logout')
+      emit('close')
+    }
+
+    const connected = computed(() => {
+      return store.state.web3.connected
+    })
+
+    const address = computed(() => {
+      return store.state.web3.address
+    })
+
     return {
       connect,
+      logout,
+      connected,
+      address,
     }
   }
 }

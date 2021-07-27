@@ -1,5 +1,6 @@
 import {createStore} from 'vuex'
 import VuexPersistence from "vuex-persist";
+import web3 from './modules/web3'
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage
@@ -7,7 +8,7 @@ const vuexLocal = new VuexPersistence({
 
 export default createStore({
   state: {
-    darkMode: true
+    darkMode: true,
   },
   mutations: {
     changeTheme(state, darkMode) {
@@ -20,10 +21,12 @@ export default createStore({
         document.body.classList.remove('dark')
         document.body.classList.add('light')
       }
-    }
+    },
   },
   actions: {},
-  modules: {},
+  modules: {
+    web3
+  },
   plugins: [
     vuexLocal.plugin
   ]
