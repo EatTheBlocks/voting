@@ -35,8 +35,9 @@
 
 <script>
 import {ref, computed, onMounted} from 'vue'
-import {ExternalLinkIcon} from '@heroicons/vue/outline'
 import {useStore} from 'vuex'
+import {useRouter} from 'vue-router'
+import {ExternalLinkIcon} from '@heroicons/vue/outline'
 import axios from 'axios'
 import {provider} from '@/store/modules/web3'
 
@@ -50,9 +51,10 @@ export default {
     proposal: Object,
     choice: Number,
   },
-  emits: ['close'],
-  setup(props) {
+  emits: ['close', 'voted'],
+  setup(props, {emit}) {
     const store = useStore()
+    const router = useRouter()
 
     const power = ref(0)
 
@@ -88,9 +90,10 @@ export default {
       axios.post(`${process.env.VUE_APP_HUB_URL}/vote`, {
         signature: signature,
         vote: vote,
-      }).then((response) => {
-        console.log(response)
-        // TODO reload page
+      }).then(() => {
+        router.push({name: 'Proposal', params: {id: props.proposal.id}})
+        emit('close')
+        emit('voted')
       }).catch((error) => {
         console.error(error)
       })

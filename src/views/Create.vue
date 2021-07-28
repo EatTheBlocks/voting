@@ -82,6 +82,7 @@
 <script>
 import {ref, computed, onMounted} from 'vue'
 import {useStore} from 'vuex'
+import {useRouter} from 'vue-router'
 import axios from 'axios'
 import {XIcon, SparklesIcon, InformationCircleIcon} from '@heroicons/vue/outline'
 import {provider} from '@/store/modules/web3'
@@ -93,6 +94,7 @@ export default {
   },
   setup() {
     const store = useStore()
+    const router = useRouter()
 
     const selectedDate = ref('')
     const form = ref({
@@ -157,7 +159,7 @@ export default {
         signature: signature,
         proposal: proposal,
       }).then((response) => {
-        console.log(response)
+        router.push({name: 'Proposal', params: { id: response.data }})
       }).catch((error) => {
         console.error(error)
       })

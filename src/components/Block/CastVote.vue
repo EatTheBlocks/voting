@@ -21,6 +21,7 @@
     :proposal="proposal"
     :choice="selectedChoice"
     @close="modalConfirmOpen= false"
+    @voted="$emit('voted')"
   />
 </template>
 
@@ -35,7 +36,7 @@ export default {
       required: true,
     }
   },
-  emits: ['selectedChoice'],
+  emits: ['voted'],
   setup(_, {emit}) {
     const selectedChoice = ref(0)
     const modalConfirmOpen = ref(false)

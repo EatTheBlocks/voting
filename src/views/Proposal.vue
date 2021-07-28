@@ -16,8 +16,11 @@
           }}
         </UiLabel>
         <UiMarkdown :body="proposal.body" class="space-y-5"></UiMarkdown>
-        <BlockCastVote :proposal="proposal"
-                       v-if="proposal.state === 'active' && !alreadyVoted"/>
+        <BlockCastVote
+          :proposal="proposal"
+          @voted="load"
+          v-if="proposal.state === 'active' && !alreadyVoted"
+        />
         <BlockVotes :proposal="proposal" :votes="votes" v-if="!loadingResults && votes.length > 0"/>
       </div>
     </div>
@@ -171,6 +174,7 @@ export default {
     return {
       loading,
       loadingResults,
+      load,
       proposal,
       votes,
       alreadyVoted,
