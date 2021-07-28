@@ -67,7 +67,7 @@ export default {
     const modalAboutOpen = ref(false)
 
     function changeTheme(darkMode) {
-      this.$store.commit('changeTheme', darkMode)
+      store.commit('changeTheme', darkMode)
     }
 
     return {
