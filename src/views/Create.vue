@@ -131,6 +131,7 @@ export default {
         form.value.body &&
         form.value.body.length <= bodyLimit.value &&
         form.value.choices.length >= 2 &&
+        !form.value.choices.some(a => a === '') &&
         form.value.start > 0 &&
         form.value.end > 0 &&
         form.value.end > form.value.start &&
