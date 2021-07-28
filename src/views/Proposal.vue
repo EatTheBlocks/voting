@@ -15,9 +15,10 @@
             capitalize(proposal.state)
           }}
         </UiLabel>
-        <div v-html="markdown(proposal.body)" class="space-y-5 markdown"></div>
-        <BlockCastVote :proposal="proposal"/>
-        <BlockVotes :proposal="proposal" :votes="votes" :loaded="true"/>
+        <UiMarkdown :body="proposal.body" class="space-y-5"></UiMarkdown>
+        <BlockCastVote :proposal="proposal"
+                       v-if="proposal.state === 'active' && !alreadyVoted"/>
+        <BlockVotes :proposal="proposal" :votes="votes" v-if="!loadingResults && votes"/>
       </div>
     </div>
     <div class="w-4/12 space-y-5" v-if="!loading">
@@ -51,57 +52,30 @@
           <div>
             <div>Snapshot</div>
             <div>
-              <a :href="_explorer(56, 12345678, 'block')" target="_blank" class="flex items-center">
-                {{ _n(12345678, '0,0') }}
+              <a :href="_explorer(56, proposal.snapshot, 'block')" target="_blank" class="flex items-center">
+                {{ _n(proposal.snapshot, '0,0') }}
                 <ExternalLinkIcon class="ml-1 h-4 w-4"/>
               </a>
             </div>
           </div>
         </div>
       </div>
-      <div class="panel">
-        <div class="panel-title">Results</div>
-        <div class="panel-body">
-          <div class="animate-pulse" v-if="loadingResults">
-            <div class="space-y-3">
-              <div class="h-6 bg-main-text rounded w-5/6"></div>
-              <div class="h-6 bg-main-text rounded w-3/6"></div>
-            </div>
-          </div>
-          <div class="space-y-3" v-else>
-            <UiProgress :text="proposal.choices[0] + ' 123.25k ' + $TokenName" :percent="40"></UiProgress>
-            <UiProgress :text="proposal.choices[1] + ' 853.86k ' + $TokenName" :percent="60"></UiProgress>
-          </div>
-        </div>
-      </div>
+      <BlockResults
+        :loading="loadingResults"
+        :proposal="proposal"
+        :votes="votes"
+        :results="results"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import {ref, onMounted} from 'vue'
+import {ref, computed, onMounted} from 'vue'
+import {useStore} from 'vuex'
 import {useRoute} from 'vue-router'
 import axios from 'axios'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
-import DOMPurify from 'dompurify'
-import marked from 'marked'
-
-let votes = [
-  {
-    id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
-    voter: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
-    created: 1625695452,
-    choice: 0,
-    tokens: 100,
-  },
-  {
-    id: "QmYTcx9abcdY5RkFrD15yCvFD5eMxwdsfhSgSbdB2UxNJgd",
-    voter: "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a",
-    created: 1625695452,
-    choice: 1,
-    tokens: 200,
-  }
-]
 
 export default {
   name: 'Proposal',
@@ -109,6 +83,8 @@ export default {
     ExternalLinkIcon,
   },
   setup() {
+    const store = useStore()
+
     const loading = ref(true)
     const loadingResults = ref(true)
     const proposal = ref({
@@ -120,22 +96,50 @@ export default {
       start: 0,
       end: 0,
     })
+    const votes = ref([])
+    const alreadyVoted = ref(false)
+    const results = ref({})
 
     const route = useRoute()
     const id = route.params.id
 
-    async function getProposals() {
-      axios.get(`${process.env.VUE_APP_HUB_URL}/proposal/` + id)
-        .then((response) => {
-          proposal.value = response.data.proposal
-          proposal.value.state = proposal.value.end > Date.now() ? 'active' : 'closed'
-        }).catch((error) => {
+    async function getProposal() {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_HUB_URL}/proposal/` + id)
+        proposal.value = response.data.proposal
+        proposal.value.state = proposal.value.end > Date.now() ? 'active' : 'closed'
+        votes.value = response.data.votes
+      } catch (error) {
         console.error(error)
-      })
+      }
     }
 
-    function markdown(text) {
-      return marked(DOMPurify.sanitize(text))
+    async function getScores() {
+      try {
+        const responseScore = await axios.post(`${process.env.VUE_APP_HUB_URL}/score`, {
+          snapshot: proposal.value.snapshot,
+          addresses: votes.value.map(v => v.author),
+        })
+
+        votes.value = votes.value.map(vote => {
+          vote.balance = responseScore.data.result.scores[0][vote.author] || 0
+          return vote
+        })
+          .sort((a, b) => b.balance - a.balance)
+        //.filter(vote => vote.balance > 0)
+
+        const sumOfResultsBalance = votes.value.reduce((a, b) => a + b.balance, 0)
+        const resultsByVoteBalance = proposal.value.choices.map((choice, i) => {
+          return votes.value.filter(vote => vote.choice === i + 1).reduce((a, b) => a + b.balance, 0)
+        })
+
+        results.value = {
+          sumOfResultsBalance: sumOfResultsBalance,
+          resultsByVoteBalance: resultsByVoteBalance,
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     function capitalize(value) {
@@ -144,10 +148,22 @@ export default {
       return value.charAt(0).toUpperCase() + value.slice(1)
     }
 
+    const address = computed(() => {
+      return store.state.web3.address
+    })
+
     async function load() {
       loading.value = true
-      await getProposals()
+      loadingResults.value = true
+
+      await getProposal()
+      if (votes.value) {
+        alreadyVoted.value = votes.value.some(v => v.author === store.state.web3.address)
+      }
       loading.value = false
+
+      await getScores()
+      loadingResults.value = false
     }
 
     onMounted(load)
@@ -156,9 +172,11 @@ export default {
       loading,
       loadingResults,
       proposal,
-      votes: votes,
-      markdown,
+      votes,
+      alreadyVoted,
+      results,
       capitalize,
+      address,
     }
   },
 }

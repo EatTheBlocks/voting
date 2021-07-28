@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-2">
     <div class="flex justify-between">
-      <div>{{ text }}</div>
-      <div>{{ percent }}%</div>
+      <div><slot/></div>
+      <div>{{ _n(percent, '0.[00]') }}%</div>
     </div>
     <div class="bg-main-border w-full h-2 rounded-full relative flex overflow-hidden">
       <div class="bg-main-progress h-full rounded-full" :style="'width: '+percent+'%'"></div>
@@ -14,7 +14,6 @@
 export default {
   name: 'Progress',
   props: {
-    text: String,
     percent: Number,
   }
 }

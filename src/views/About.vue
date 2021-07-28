@@ -8,14 +8,16 @@
       <div class="panel">
         <div class="panel-body space-y-3">
           <h4 class="text-xl font-semibold">About</h4>
-          <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vulputate mi nunc. Mauris posuere, nunc a vestibulum luctus, magna nibh ultricies enim, ut dignissim ex lorem nec diam.</div>
+          <p>The #1 school for Blockchain Development<br>Up-to-date &amp; easy-to-follow tutorials to learn Blockchain Development: Ethereum, Solidity, Web3, DeFi</p>
           <h4 class="text-xl font-semibold">Network</h4>
-          <div>Binance Smart Chain</div>
+          <div>{{ network }}</div>
           <h4 class="text-xl font-semibold">Token Address</h4>
-          <div class="flex items-center">
-            0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a
-            <ExternalLinkIcon class="ml-1 h-4 w-4"/>
-          </div>
+          <a :href="_explorer(56, tokenAddress, 'token')" target="_blank">
+            <div class="flex items-center mt-3">
+              {{ tokenAddress }}
+              <ExternalLinkIcon class="ml-1 h-4 w-4"/>
+            </div>
+          </a>
         </div>
       </div>
       <div class="panel">
@@ -31,12 +33,11 @@
 </template>
 
 <script>
+import networks from '@/helpers/networks.json'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
 
 const members = [
   {address: "0x4e48c12cf0abef413a2e8994b4a6a743c3f2d296"},
-  {address: "0x2509ec5907f6e265939c750c80548bbda3c08d2c"},
-  {address: "0xb3ee966ff8c19522a3603d6e889d9440fb4b63a9"},
 ]
 
 export default {
@@ -44,9 +45,14 @@ export default {
   components: {
     ExternalLinkIcon
   },
-  data() {
+  setup() {
+    const network = networks[process.env.VUE_APP_NETWORK_ID].name
+    const tokenAddress = process.env.VUE_APP_TOKEN_ADDRESS
+
     return {
-      members: members
+      network,
+      tokenAddress,
+      members: members,
     }
   }
 }

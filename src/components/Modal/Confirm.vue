@@ -2,13 +2,13 @@
   <UiModal :open="open" @close="$emit('close')">
     <template #header>Confirm vote</template>
     <div class="text-center font-semibold text-lg">
-      <p>Are you sure you want to vote "{{ _shorten(proposal.choices[choice-1], 32) }}"?</p>
+      <p>Are you sure you want to vote "{{ _shorten(proposal.choices[choice - 1], 32) }}"?</p>
       <p>This action cannot be undone</p>
     </div>
     <div class="mt-5 border border-main-border rounded-md p-6 space-y-1">
       <div class="flex justify-between">
         <div class="font-semibold">Option</div>
-        <div class="text-main-link">{{ _shorten(proposal.choices[choice-1], 32) }}</div>
+        <div class="text-main-link">{{ _shorten(proposal.choices[choice - 1], 32) }}</div>
       </div>
       <div class="flex justify-between">
         <div class="font-semibold">Snapshot</div>
@@ -27,7 +27,7 @@
     <template #footer>
       <div class="flex space-x-5">
         <UiButton @click="$emit('close')">Cancel</UiButton>
-        <UiButton @click="handleSubmit" :disabled="!canVote">Vote</UiButton>
+        <UiButton @click="vote" :disabled="!canVote">Vote</UiButton>
       </div>
     </template>
   </UiModal>
@@ -36,6 +36,9 @@
 <script>
 import {computed} from 'vue'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
+import {useStore} from 'vuex'
+import axios from 'axios'
+import {provider} from '@/store/modules/web3'
 
 export default {
   name: 'Confirm',
@@ -48,18 +51,37 @@ export default {
     choice: Number,
   },
   emits: ['close'],
-  setup() {
+  setup(props) {
+    const store = useStore()
+
     const canVote = computed(() => {
-      return false
+      return true // TODO
     })
 
-    function handleSubmit() {
+    async function vote() {
+      const vote = {
+        author: store.state.web3.address,
+        proposal: props.proposal.id,
+        choice: props.choice,
+        timestamp: Date.now(),
+      }
 
+      const signer = provider.getSigner()
+      const signature = await signer.signMessage(JSON.stringify(vote))
+
+      axios.post(`${process.env.VUE_APP_HUB_URL}/vote`, {
+        signature: signature,
+        vote: vote,
+      }).then((response) => {
+        console.log(response)
+      }).catch((error) => {
+        console.error(error)
+      })
     }
 
     return {
       canVote,
-      handleSubmit,
+      vote,
     }
   }
 }

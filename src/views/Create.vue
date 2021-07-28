@@ -9,9 +9,12 @@
         v-model="form.body"
         placeholder="What is your proposal?"
         class="block outline-none resize-none bg-transparent text-main-link font-semibold w-full h-16 tracking-wider"/>
+      <div v-if="form.body.length > bodyLimit" class="text-red-500">
+        -{{ _n(-(bodyLimit - form.body.length)) }}
+      </div>
       <div v-if="!!form.body" class="space-y-5">
         <div class="text-xl font-semibold text-main-heading">Preview</div>
-        <div v-html="markdown" class="space-y-5 markdown"></div>
+        <UiMarkdown :body="form.body" class="space-y-5"></UiMarkdown>
       </div>
       <div class="panel">
         <div class="panel-title">Choices</div>
@@ -54,6 +57,9 @@
             <span v-if="!form.end">Select end date</span>
             <span v-else>{{ $d(form.end * 1e3, 'short') }}</span>
           </UiButton>
+          <UiButton>
+            <input v-model="form.snapshot" class="outline-none h-6 text-center font-semibold text-main-link">
+          </UiButton>
           <UiButton @click="publish" :disabled="!isValid">Publish</UiButton>
         </div>
       </div>
@@ -70,11 +76,9 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import {useStore} from 'vuex'
 import axios from 'axios'
-import DOMPurify from 'dompurify'
-import marked from 'marked'
 import {XIcon, SparklesIcon} from '@heroicons/vue/outline'
 import {provider} from '@/store/modules/web3'
 
@@ -93,11 +97,9 @@ export default {
       choices: ['', ''],
       start: 0,
       end: 0,
+      snapshot: 0,
     })
-
-    const markdown = computed(() => {
-      return marked(DOMPurify.sanitize(form.value.body))
-    })
+    const bodyLimit = ref(1e4)
 
     const modalSelectDateOpen = ref(false)
 
@@ -118,11 +120,12 @@ export default {
     const isValid = computed(() => {
       return form.value.title &&
         form.value.body &&
-        // TODO form.value.body <= bodyLimit
+        form.value.body.length <= bodyLimit.value &&
         form.value.choices.length >= 2 &&
         form.value.start > 0 &&
         form.value.end > 0 &&
-        form.value.end > form.value.start
+        form.value.end > form.value.start &&
+        form.value.snapshot > 0
     })
 
     async function publish() {
@@ -134,6 +137,7 @@ export default {
         created: Date.now(),
         start: form.value.start * 1e3,
         end: form.value.end * 1e3,
+        snapshot: form.value.snapshot,
       }
 
       const signer = provider.getSigner()
@@ -149,15 +153,19 @@ export default {
       })
     }
 
+    onMounted(async () => {
+      form.value.snapshot = await provider.getBlockNumber()
+    })
+
     return {
       form,
-      markdown,
       selectedDate,
       modalSelectDateOpen,
       setDate,
       addChoice,
       removeChoice,
       isValid,
+      bodyLimit,
       publish,
     }
   }
