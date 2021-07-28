@@ -64,6 +64,9 @@ export default {
     })
 
     async function votingPower() {
+      if (!store.state.web3.connected) {
+        return 0
+      }
       const response = await axios.post(`${process.env.VUE_APP_HUB_URL}/score`, {
         snapshot: props.proposal.snapshot,
         addresses: [address.value],

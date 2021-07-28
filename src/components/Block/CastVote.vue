@@ -11,7 +11,7 @@
         {{ _shorten(choice, 32) }}
       </UiButton>
       <div>
-        <UiButton :disabled="selectedChoice == 0" @click="modalConfirmOpen = true" class="mt-3">Vote</UiButton>
+        <UiButton :disabled="selectedChoice == 0 || !$store.state.web3.connected" @click="modalConfirmOpen = true" class="mt-3">Vote</UiButton>
       </div>
     </div>
   </div>

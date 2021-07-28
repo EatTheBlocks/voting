@@ -3,7 +3,8 @@
     <div class="max-w-[1012px] mx-auto flex justify-between items-center">
       <router-link :to="{name:'Home'}" class="text-xl font-semibold flex items-center">
         <img src="@/assets/imgs/logo-long.png" alt="etb logo" class="w-72 mr-3">
-        / voting app</router-link>
+        / voting app
+      </router-link>
       <div class="flex space-x-2 items-center">
         <div class="flex items-center">
           <!--          <component :is="enabled?'SunIcon':'MoonIcon'" class="h-6 w-6 mr-2" />-->
@@ -24,6 +25,12 @@
         </div>
         <Wallet/>
         <button
+          v-if="parseInt($store.state.web3.network, 16) != $store.state.space.network"
+          @click="changeNetwork"
+          class="px-5 py-3 rounded-full font-semibold text-sm bg-red-500 text-white hover:bg-white hover:text-red-500">
+          Incorrect Network
+        </button>
+        <button
           @click="modalAboutOpen = true"
           class="border border-white px-5 py-3 rounded-full font-semibold text-sm hover:bg-white hover:text-main-primary">
           ?
@@ -43,6 +50,7 @@ import {ref} from 'vue'
 import {useStore} from 'vuex'
 import {Switch} from '@headlessui/vue'
 import {SunIcon, MoonIcon} from '@heroicons/vue/outline'
+import {changeNetwork} from '@/store/modules/web3'
 
 export default {
   name: 'Header',
@@ -58,19 +66,16 @@ export default {
 
     const modalAboutOpen = ref(false)
 
+    function changeTheme(darkMode) {
+      this.$store.commit('changeTheme', darkMode)
+    }
+
     return {
       enabled,
       modalAboutOpen,
-    }
-  },
-  methods: {
-    changeTheme(darkMode) {
-      this.$store.commit('changeTheme', darkMode)
+      changeTheme,
+      changeNetwork,
     }
   },
 }
 </script>
-
-<style scoped>
-
-</style>

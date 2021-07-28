@@ -46,6 +46,8 @@ export default {
   setup(props, {emit}) {
     const store = useStore()
 
+    store.dispatch('web3/init')
+
     async function connect() {
       await store.dispatch('web3/connect')
       emit('close')

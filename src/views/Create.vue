@@ -125,6 +125,9 @@ export default {
     }
 
     const isAdmin = computed(() => {
+      if (!store.state.web3.connected) {
+        return false
+      }
       return store.state.space.admins.map(admin => admin.toLowerCase()).includes(store.state.web3.address.toLowerCase())
     })
 
