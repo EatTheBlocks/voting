@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
@@ -11,13 +12,14 @@ import (
 )
 
 type Proposal struct {
-	Author  string   `json:"author"`
-	Title   string   `json:"title"`
-	Body    string   `json:"body"`
-	Choices []string `json:"choices"`
-	Created int64    `json:"created"`
-	Start   int64    `json:"start"`
-	End     int64    `json:"end"`
+	Author   string   `json:"author"`
+	Title    string   `json:"title"`
+	Body     string   `json:"body"`
+	Choices  []string `json:"choices"`
+	Created  int64    `json:"created"`
+	Start    int64    `json:"start"`
+	End      int64    `json:"end"`
+	Snapshot int64    `json:"snapshot"`
 }
 
 type SignedProposalIFPS struct {
@@ -45,7 +47,7 @@ func (h handler) PostProposal(c echo.Context) error {
 	}
 
 	name := slug.MakeLang(signedProposal.Proposal.Title, "en")
-	hash, err := h.ipfs.PinJSON("etb/"+name, signedProposal)
+	hash, err := h.ipfs.PinJSON("etb/proposal/"+strconv.FormatInt(signedProposal.Proposal.Created, 10)+"-"+name, signedProposal)
 	if err != nil {
 		//log.Fatal(err) // TODO
 		return c.JSON(http.StatusInternalServerError, err)
@@ -79,7 +81,6 @@ func (h handler) GetProposals(c echo.Context) error {
 	defer cur.Close(ctx)
 
 	var proposals []ProposalIFPS
-
 	for cur.Next(ctx) {
 		var proposal ProposalIFPS
 		err = cur.Decode(&proposal)
@@ -90,7 +91,6 @@ func (h handler) GetProposals(c echo.Context) error {
 
 		proposals = append(proposals, proposal)
 	}
-
 	if err = cur.Err(); err != nil {
 		//log.Fatal(err) // TODO
 		return c.JSON(http.StatusInternalServerError, err)
@@ -118,9 +118,36 @@ func (h handler) GetProposal(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
+	collectionVotes := h.db.Client().Database("etb-voting-app").Collection("votes")
+
+	cur, err := collectionVotes.Find(ctx, bson.D{{"vote.proposal", proposal.ID}})
+	if err != nil {
+		//log.Fatal(err) // TODO
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	defer cur.Close(ctx)
+
+	var votes []VoteIFPS
+	for cur.Next(ctx) {
+		var vote VoteIFPS
+		err = cur.Decode(&vote)
+		if err != nil {
+			//log.Fatal(err) // TODO
+			return c.JSON(http.StatusInternalServerError, err)
+		}
+
+		votes = append(votes, vote)
+	}
+	if err = cur.Err(); err != nil {
+		//log.Fatal(err) // TODO
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
 	return c.JSON(http.StatusOK, struct {
 		Proposal SignedProposalIFPS `json:"proposal"`
+		Votes    []VoteIFPS         `json:"votes"`
 	}{
 		Proposal: proposal,
+		Votes:    votes,
 	})
 }

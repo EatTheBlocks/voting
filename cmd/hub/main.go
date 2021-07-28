@@ -43,6 +43,8 @@ func main() {
 	e.POST("/proposal", h.PostProposal)
 	e.GET("/proposals", h.GetProposals)
 	e.GET("/proposal/:id", h.GetProposal)
+	e.POST("/vote", h.PostVote)
+	e.POST("/score", h.GetScore)
 
 	e.Logger.Fatal(e.Start(":80"))
 }
