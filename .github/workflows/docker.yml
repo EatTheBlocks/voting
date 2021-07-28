@@ -1,0 +1,37 @@
+
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REGISTRY: rg.fr-par.scw.cloud/etb-voting
+      DOCKER_IMAGE: hub
+      DOCKER_TAG: ${{ github.sha }}
+      DOCKER_TARGET_PLATFORM: linux/amd64,linux/386,linux/arm/v7,linux/arm64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v1
+        id: buildx
+        with:
+          install: true
+      - name: Docker login Scaleway
+        run: docker login -u nologin -p ${{ secrets.SCALEWAY_DOCKER_KEY }} ${{ env.DOCKER_REGISTRY }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: ${{ env.DOCKER_TARGET_PLATFORM }}
+          push: true
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
