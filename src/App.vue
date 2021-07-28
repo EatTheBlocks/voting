@@ -2,10 +2,8 @@
   <div class="content flex flex-col min-h-screen bg-main-bg">
     <Header></Header>
     <div class="flex-grow p-5">
-      <router-view v-if="!loading && !loadError"/>
-      <div v-else>
-        Loading...
-      </div>
+      <UiLoading v-if="loading" class="overlay big" />
+      <router-view v-else/>
     </div>
     <Footer></Footer>
     <div id="modal"/>

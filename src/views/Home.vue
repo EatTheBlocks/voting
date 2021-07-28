@@ -25,7 +25,7 @@
               <UiLabel class="badge-state" :class="'badge-'+proposal.state">{{ capitalize(proposal.state) }}</UiLabel>
             </div>
             <h2 class="text-2xl font-semibold">{{ proposal.title }}</h2>
-            <p class="text-lg">{{ proposal.body }}</p>
+            <p class="text-lg">{{ _shorten(removeMarkdown(proposal.body), 140) }}</p>
             <div>{{ _dateAgo(proposal.end) }}</div>
           </router-link>
         </div>
@@ -38,6 +38,7 @@
 <script>
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
+import removeMd from 'remove-markdown'
 
 export default {
   name: 'Home',
@@ -69,12 +70,17 @@ export default {
       loading.value = false
     }
 
+    function removeMarkdown(body) {
+      return removeMd(body)
+    }
+
     onMounted(load)
 
     return {
       loading,
       proposals,
-      capitalize
+      capitalize,
+      removeMarkdown,
     }
   }
 }
