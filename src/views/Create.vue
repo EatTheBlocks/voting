@@ -165,7 +165,7 @@ export default {
       }).then((response) => {
         router.push({name: 'Proposal', params: {id: response.data}})
       }).catch((error) => {
-        store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
+        store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
         console.error(error)
       })
     }

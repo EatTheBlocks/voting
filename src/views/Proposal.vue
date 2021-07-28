@@ -113,7 +113,7 @@ export default {
         proposal.value.state = proposal.value.end > Date.now() ? 'active' : 'closed'
         votes.value = response.data.votes || []
       } catch (error) {
-        await store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
+        await store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
         console.error(error)
       }
     }
@@ -142,7 +142,7 @@ export default {
           resultsByVoteBalance: resultsByVoteBalance,
         }
       } catch (error) {
-        await store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
+        await store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
         console.error(error)
       }
     }

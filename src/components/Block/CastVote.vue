@@ -37,13 +37,12 @@ export default {
     }
   },
   emits: ['voted'],
-  setup(_, {emit}) {
+  setup() {
     const selectedChoice = ref(0)
     const modalConfirmOpen = ref(false)
 
     function selectChoice(i) {
       selectedChoice.value = i
-      emit('selectedChoice', i)
     }
 
     return {

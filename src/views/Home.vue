@@ -59,7 +59,7 @@ export default {
             proposal.state = proposal.end > Date.now() ? 'active' : 'closed'
           })
         }).catch((error) => {
-        store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
+        store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
         console.error(error)
       })
     }

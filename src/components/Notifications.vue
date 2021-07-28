@@ -23,7 +23,7 @@ export default {
   setup() {
     const store = useStore()
     const now = ref(Date.now())
-    const duration = ref(40000)
+    const duration = ref(4000)
 
     const items = computed(() => store.state.notifs)
 
