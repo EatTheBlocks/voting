@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"voting-hub/internal/eth"
@@ -44,7 +46,7 @@ func (h handler) PostVote(c echo.Context) error {
 
 	msg, err := json.Marshal(signedVote.Vote)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostVote decode json vote"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -59,7 +61,7 @@ func (h handler) PostVote(c echo.Context) error {
 	if err == mongo.ErrNoDocuments {
 		return c.JSON(http.StatusNotFound, "proposal not found")
 	} else if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostVote check vote"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -79,7 +81,7 @@ func (h handler) PostVote(c echo.Context) error {
 
 	hash, err := h.ipfs.PinJSON("etb/vote/"+signedVote.Vote.Proposal+"/"+signedVote.Vote.Author, signedVote)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostVote ipfs pin vote"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -90,7 +92,7 @@ func (h handler) PostVote(c echo.Context) error {
 
 	_, err = collection.InsertOne(ctx, final)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostVote store vote"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 

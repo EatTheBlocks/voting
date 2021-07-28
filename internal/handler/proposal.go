@@ -6,6 +6,8 @@ import (
 
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -49,7 +51,7 @@ func (h handler) PostProposal(c echo.Context) error {
 	name := slug.MakeLang(signedProposal.Proposal.Title, "en")
 	hash, err := h.ipfs.PinJSON("etb/proposal/"+strconv.FormatInt(signedProposal.Proposal.Created, 10)+"-"+name, signedProposal)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostProposal ipfs pin proposal"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -60,7 +62,7 @@ func (h handler) PostProposal(c echo.Context) error {
 
 	_, err = collection.InsertOne(ctx, final)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "PostProposal store proposal"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -75,7 +77,7 @@ func (h handler) GetProposals(c echo.Context) error {
 		Sort: bson.D{{"_id", -1}},
 	})
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetProposals find proposals"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	defer cur.Close(ctx)
@@ -85,14 +87,14 @@ func (h handler) GetProposals(c echo.Context) error {
 		var proposal ProposalIFPS
 		err = cur.Decode(&proposal)
 		if err != nil {
-			//log.Fatal(err) // TODO
+			log.Error(errors.Wrap(err, "GetProposals decode proposal"))
 			return c.JSON(http.StatusInternalServerError, err)
 		}
 
 		proposals = append(proposals, proposal)
 	}
 	if err = cur.Err(); err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetProposals proposals iterator"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -112,9 +114,9 @@ func (h handler) GetProposal(c echo.Context) error {
 	var proposal SignedProposalIFPS
 	err := collection.FindOne(ctx, bson.D{{"id", id}}).Decode(&proposal)
 	if err == mongo.ErrNoDocuments {
-		return c.JSON(http.StatusNotFound, "space not found")
+		return c.JSON(http.StatusNotFound, "proposal not found")
 	} else if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetProposal find proposal"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -122,7 +124,7 @@ func (h handler) GetProposal(c echo.Context) error {
 
 	cur, err := collectionVotes.Find(ctx, bson.D{{"vote.proposal", proposal.ID}})
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetProposal find votes"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 	defer cur.Close(ctx)
@@ -132,14 +134,14 @@ func (h handler) GetProposal(c echo.Context) error {
 		var vote VoteIFPS
 		err = cur.Decode(&vote)
 		if err != nil {
-			//log.Fatal(err) // TODO
+			log.Error(errors.Wrap(err, "GetProposal decode vote"))
 			return c.JSON(http.StatusInternalServerError, err)
 		}
 
 		votes = append(votes, vote)
 	}
 	if err = cur.Err(); err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetProposal votes iterator"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 

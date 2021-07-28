@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  hub:
+    build: .
+    restart: always
+    env_file:
+      - prod.env
+    ports:
+      - "80:80"
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+#    ports:
+#      - "27018:27017"
+    volumes:
+      - "./data:/data/db"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30

@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type SnapshotScoreRequest struct {
@@ -55,7 +58,6 @@ type SnapshotScoreResponse struct {
 
 // GetScore temporary solution that use score.snapshot.org server for archive data
 func (h handler) GetScore(c echo.Context) error {
-
 	var scoreRequest struct {
 		Snapshot  int      `json:"snapshot"`
 		Addresses []string `json:"addresses"`
@@ -102,13 +104,13 @@ func (h handler) GetScore(c echo.Context) error {
 
 	jsonBody, err := json.Marshal(snapshotScoreRequest)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetScore json encode"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
 	req, err := http.NewRequest("POST", "https://score.snapshot.org/api/scores", bytes.NewReader(jsonBody))
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetScore new request"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -126,7 +128,7 @@ func (h handler) GetScore(c echo.Context) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetScore send request"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
@@ -135,7 +137,7 @@ func (h handler) GetScore(c echo.Context) error {
 	var snapshotScoreResponse SnapshotScoreResponse
 	decoder := json.NewDecoder(resp.Body)
 	if err = decoder.Decode(&snapshotScoreResponse); err != nil {
-		//log.Fatal(err) // TODO
+		log.Error(errors.Wrap(err, "GetScore parse json response"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
