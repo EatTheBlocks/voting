@@ -29,7 +29,9 @@
             <div>{{ _dateAgo(proposal.end) }}</div>
           </router-link>
         </div>
-        <div class="border border-main-border rounded-md p-6 font-semibold text-center w-full" v-if="proposals.length === 0">Oops, we can't find any results</div>
+        <div class="border border-main-border rounded-md p-6 font-semibold text-center w-full"
+             v-if="proposals.length === 0">Oops, we can't find any results
+        </div>
       </div>
     </div>
   </div>
@@ -37,12 +39,15 @@
 
 <script>
 import {ref, onMounted} from 'vue'
+import {useStore} from 'vuex'
 import axios from 'axios'
 import removeMd from 'remove-markdown'
 
 export default {
   name: 'Home',
   setup() {
+    const store = useStore()
+
     const loading = ref(true)
     const proposals = ref([])
 
@@ -54,6 +59,7 @@ export default {
             proposal.state = proposal.end > Date.now() ? 'active' : 'closed'
           })
         }).catch((error) => {
+        store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
         console.error(error)
       })
     }

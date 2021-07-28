@@ -15,7 +15,8 @@ export default createStore({
       address: "",
       network: "",
       admins: [],
-    }
+    },
+    notifs: [],
   },
   mutations: {
     changeTheme(state, darkMode) {
@@ -31,9 +32,21 @@ export default createStore({
     },
     setSpace(state, space) {
       state.space = space
+    },
+    notify(state, payload) {
+      state.notifs.push({...payload, timestamp: Date.now()})
+    },
+    emptyNotifs(state) {
+      state.notifs = []
     }
   },
-  actions: {},
+  actions: {
+    notify({commit}, payload) {
+      Array.isArray(payload)
+        ? commit('notify', {message: payload[0], color: payload[1]})
+        : commit('notify', {message: payload, color: 'bg-green-500'});
+    }
+  },
   modules: {
     web3
   },

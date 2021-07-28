@@ -95,7 +95,9 @@ export default {
         emit('close')
         emit('voted')
       }).catch((error) => {
+        store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
         console.error(error)
+        emit('close')
       })
     }
 

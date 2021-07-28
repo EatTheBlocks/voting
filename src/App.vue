@@ -7,6 +7,7 @@
     </div>
     <Footer></Footer>
     <div id="modal"/>
+    <Notifications />
   </div>
 </template>
 
@@ -29,6 +30,7 @@ export default {
         const response = await axios.get(`${process.env.VUE_APP_HUB_URL}`)
         store.commit('setSpace', response.data)
       } catch (error) {
+        await store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
         loadError.value = error
       }
     }
@@ -38,6 +40,8 @@ export default {
       await getSpace()
       loading.value = false
     }
+
+    store.commit('emptyNotifs')
 
     onMounted(load)
 

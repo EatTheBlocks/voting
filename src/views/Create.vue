@@ -62,7 +62,8 @@
             <span v-else>{{ $d(form.end * 1e3, 'short') }}</span>
           </UiButton>
           <UiButton>
-            <input v-model="form.snapshot" class="outline-none h-6 text-center font-semibold text-main-link bg-transparent">
+            <input v-model="form.snapshot"
+                   class="outline-none h-6 text-center font-semibold text-main-link bg-transparent">
           </UiButton>
           <UiButton @click="publish" :disabled="!isValid">Publish</UiButton>
         </div>
@@ -129,7 +130,7 @@ export default {
 
     const isValid = computed(() => {
       return isAdmin.value &&
-      form.value.title &&
+        form.value.title &&
         form.value.body &&
         form.value.body.length <= bodyLimit.value &&
         form.value.choices.length >= 2 &&
@@ -159,8 +160,9 @@ export default {
         signature: signature,
         proposal: proposal,
       }).then((response) => {
-        router.push({name: 'Proposal', params: { id: response.data }})
+        router.push({name: 'Proposal', params: {id: response.data}})
       }).catch((error) => {
+        store.dispatch('notify', ["Oops, " + error.message, 'bg-red-500'])
         console.error(error)
       })
     }
