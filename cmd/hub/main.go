@@ -39,7 +39,10 @@ func main() {
 		{"token", "ETB"},
 		{"address", "0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a"},
 		{"network", "56"},
-		{"admins", []string{"0x4E48C12cf0ABEf413A2E8994B4A6a743C3f2d296"}},
+		{"admins", []string{
+			"0x4E48C12cf0ABEf413A2E8994B4A6a743C3f2d296",
+			"0x539dea3fe88d32b46dd6e07b9ad99c59e81d85be",
+		}},
 	})
 
 	pinata := ipfs.NewPinataClient(pinataApiKey, pinataSecretKey)

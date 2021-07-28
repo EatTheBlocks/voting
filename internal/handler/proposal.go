@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
@@ -46,6 +47,26 @@ func (h handler) PostProposal(c echo.Context) error {
 
 	if err := c.Bind(&signedProposal); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
+	}
+
+	var space Space
+	collectionSpace := h.db.Client().Database("etb-voting-app").Collection("space")
+	err := collectionSpace.FindOne(ctx, bson.D{}).Decode(&space)
+	if err == mongo.ErrNoDocuments {
+		return c.JSON(http.StatusNotFound, "space not found")
+	} else if err != nil {
+		log.Error(errors.Wrap(err, "GetSpace find space"))
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	isAdmin := false
+	for _, admin := range space.Admins {
+		if strings.ToLower(signedProposal.Proposal.Author) == strings.ToLower(admin) {
+			isAdmin = true
+			break
+		}
+	}
+	if !isAdmin {
+		return c.JSON(http.StatusBadRequest, "you must be an admin in order to submit a proposal")
 	}
 
 	name := slug.MakeLang(signedProposal.Proposal.Title, "en")
