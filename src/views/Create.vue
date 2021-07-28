@@ -2,6 +2,10 @@
   <div class="flex max-w-[1012px] mx-auto space-x-10">
     <div class="w-8/12 space-y-5">
       <BackButton :to="{name: 'Home'}"/>
+      <div class="border border-main-border rounded-md px-6 py-5 w-full flex items-center" v-if="!isAdmin">
+        <InformationCircleIcon class="w-4 h-4 mr-2"/>
+        You need to be in the admin list in order to submit a proposal.
+      </div>
       <input v-model="form.title" type="text"
              class="block w-full outline-none text-3xl bg-transparent text-main-link font-semibold"
              placeholder="Question">
@@ -79,13 +83,13 @@
 import {ref, computed, onMounted} from 'vue'
 import {useStore} from 'vuex'
 import axios from 'axios'
-import {XIcon, SparklesIcon} from '@heroicons/vue/outline'
+import {XIcon, SparklesIcon, InformationCircleIcon} from '@heroicons/vue/outline'
 import {provider} from '@/store/modules/web3'
 
 export default {
   name: 'Create',
   components: {
-    XIcon, SparklesIcon,
+    XIcon, SparklesIcon, InformationCircleIcon
   },
   setup() {
     const store = useStore()
@@ -117,8 +121,13 @@ export default {
       form.value.choices.splice(i, 1);
     }
 
+    const isAdmin = computed(() => {
+      return store.state.space.admins.map(admin => admin.toLowerCase()).includes(store.state.web3.address.toLowerCase())
+    })
+
     const isValid = computed(() => {
-      return form.value.title &&
+      return isAdmin.value &&
+      form.value.title &&
         form.value.body &&
         form.value.body.length <= bodyLimit.value &&
         form.value.choices.length >= 2 &&
@@ -158,6 +167,7 @@ export default {
     })
 
     return {
+      isAdmin,
       form,
       selectedDate,
       modalSelectDateOpen,

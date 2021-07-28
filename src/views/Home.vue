@@ -29,7 +29,7 @@
             <div>{{ _dateAgo(proposal.end) }}</div>
           </router-link>
         </div>
-        <div class="border border-main-border rounded-md p-6 font-semibold text-center w-full" v-if="!proposals">Oops, we can't find any results</div>
+        <div class="border border-main-border rounded-md p-6 font-semibold text-center w-full" v-if="proposals.length === 0">Oops, we can't find any results</div>
       </div>
     </div>
   </div>
