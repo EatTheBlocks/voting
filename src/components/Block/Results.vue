@@ -11,7 +11,7 @@
       <div class="space-y-3" v-else>
         <UiProgress v-for="(choice, i) in proposal.choices" :key="i"
                     :percent="100*results.resultsByVoteBalance[i]/results.sumOfResultsBalance">
-          {{ _shorten(choice, 'choice') }} {{ _n(results.resultsByVoteBalance[i]) }} {{ $TokenName }}
+          {{ _shorten(choice, 'choice') }} {{ _n(results.resultsByVoteBalance[i]) }} {{ $store.state.space.token }}
         </UiProgress>
       </div>
     </div>

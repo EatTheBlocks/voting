@@ -13,15 +13,15 @@
       <div class="flex justify-between">
         <div class="font-semibold">Snapshot</div>
         <div class="text-main-link">
-          <a :href="_explorer(56, 12345678, 'block')" target="_blank" class="flex items-center">
-            {{ _n(12345678, '0,0') }}
+          <a :href="_explorer(56, proposal.snapshot, 'block')" target="_blank" class="flex items-center">
+            {{ _n(proposal.snapshot, '0,0') }}
             <ExternalLinkIcon class="ml-1 h-4 w-4"/>
           </a>
         </div>
       </div>
       <div class="flex justify-between">
         <div class="font-semibold">Your voting power</div>
-        <div class="text-main-link">0 {{ $TokenName }}</div>
+        <div class="text-main-link">{{ _n(power) }} {{ $store.state.space.token }}</div>
       </div>
     </div>
     <template #footer>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {computed} from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
 import {useStore} from 'vuex'
 import axios from 'axios'
@@ -54,8 +54,24 @@ export default {
   setup(props) {
     const store = useStore()
 
+    const power = ref(0)
+
+    const address = computed(() => {
+      //return "0x9891d990a6608c8501145ab064b6c14a2e4f0e5e"
+      return store.state.web3.address
+    })
+
+    async function votingPower() {
+      const response = await axios.post(`${process.env.VUE_APP_HUB_URL}/score`, {
+        snapshot: props.proposal.snapshot,
+        addresses: [address.value],
+      })
+
+      power.value = response.data.result.scores[0][address.value]
+    }
+
     const canVote = computed(() => {
-      return true // TODO
+      return power.value > 0
     })
 
     async function vote() {
@@ -74,12 +90,16 @@ export default {
         vote: vote,
       }).then((response) => {
         console.log(response)
+        // TODO reload page
       }).catch((error) => {
         console.error(error)
       })
     }
 
+    onMounted(votingPower)
+
     return {
+      power,
       canVote,
       vote,
     }

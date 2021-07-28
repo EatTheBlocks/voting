@@ -3,7 +3,7 @@
     <div class="p-5 text-center bg-main-block">
       <img src="@/assets/imgs/logo-etb.png" alt="logo"
            class="rounded-full border border-main-border h-20 w-20 mx-auto mb-2">
-      <span class="text-lg font-semibold text-main-heading">{{ $AppName }}</span>
+      <span class="text-lg font-semibold text-main-heading">{{ $store.state.space.name }}</span>
     </div>
     <div class="py-3 text-main-link menu">
       <router-link :to="{name:'Home'}" class="block py-2 px-5">Proposals</router-link>

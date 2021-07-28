@@ -4,7 +4,7 @@
       <Menu/>
     </div>
     <div class="w-9/12">
-      <div class="text-sm font-semibold">{{ $AppName }}</div>
+      <div class="text-sm font-semibold">{{ $store.state.space.name }}</div>
       <h2 class="font-semibold text-2xl">Proposals</h2>
       <div class="animate-pulse" v-if="loading">
         <div class="space-y-6 mt-4">
@@ -18,7 +18,7 @@
             <div class="flex justify-between">
               <div class="flex space-x-2 items-center mb-1">
                 <img src="@/assets/imgs/token-etb.png" alt="logo" class="h-5 w-5">
-                <div class="font-semibold text-sm">{{ $TokenName }} by {{ _shorten(proposal.author) }}
+                <div class="font-semibold text-sm">{{ $store.state.space.token }} by {{ _shorten(proposal.author) }}
                 </div>
                 <UiLabel class="badge-core ml-2">Core</UiLabel>
               </div>
@@ -48,7 +48,7 @@ export default {
     async function getProposals() {
       axios.get(`${process.env.VUE_APP_HUB_URL}/proposals`)
         .then((response) => {
-          proposals.value = response.data.proposals
+          proposals.value = response.data.proposals || []
           proposals.value.forEach(proposal => {
             proposal.state = proposal.end > Date.now() ? 'active' : 'closed'
           })

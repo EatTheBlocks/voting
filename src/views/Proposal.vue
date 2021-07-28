@@ -18,7 +18,7 @@
         <UiMarkdown :body="proposal.body" class="space-y-5"></UiMarkdown>
         <BlockCastVote :proposal="proposal"
                        v-if="proposal.state === 'active' && !alreadyVoted"/>
-        <BlockVotes :proposal="proposal" :votes="votes" v-if="!loadingResults && votes"/>
+        <BlockVotes :proposal="proposal" :votes="votes" v-if="!loadingResults && votes.length > 0"/>
       </div>
     </div>
     <div class="w-4/12 space-y-5" v-if="!loading">
@@ -108,7 +108,7 @@ export default {
         const response = await axios.get(`${process.env.VUE_APP_HUB_URL}/proposal/` + id)
         proposal.value = response.data.proposal
         proposal.value.state = proposal.value.end > Date.now() ? 'active' : 'closed'
-        votes.value = response.data.votes
+        votes.value = response.data.votes || []
       } catch (error) {
         console.error(error)
       }

@@ -9,6 +9,13 @@ const vuexLocal = new VuexPersistence({
 export default createStore({
   state: {
     darkMode: true,
+    space: {
+      name: "",
+      token: "",
+      address: "",
+      network: "",
+      admins: [],
+    }
   },
   mutations: {
     changeTheme(state, darkMode) {
@@ -22,6 +29,9 @@ export default createStore({
         document.body.classList.add('light')
       }
     },
+    setSpace(state, space) {
+      state.space = space
+    }
   },
   actions: {},
   modules: {

@@ -11,7 +11,7 @@
         </div>
         <div class="flex-grow flex items-center justify-center">{{ proposal.choices[vote.choice - 1] }}</div>
         <div class="flex-none flex items-center justify-end w-36">
-          {{ _n(vote.balance) }} {{ $TokenName }}
+          {{ _n(vote.balance) }} {{ $store.state.space.token }}
           <BadgeCheckIcon class="ml-1 h-5 w-5 cursor-pointer text-green-500" @click="openReceiptModal(vote)"/>
         </div>
       </div>

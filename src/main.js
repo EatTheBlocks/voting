@@ -9,12 +9,11 @@ import camelCase from 'lodash/camelCase'
 import './assets/css/index.styl'
 import 'tailwindcss/tailwind.css'
 
+if (process.env.NODE_ENV === 'production' && location.protocol !== 'https:') {
+  location.replace(`https:${location.href.substring(location.protocol.length)}`);
+}
+
 const app = createApp(App)
-
-app.config.globalProperties.$AppName = process.env.VUE_APP_NAME || 'Voting App'
-app.config.globalProperties.$TokenName = process.env.VUE_APP_TOKEN || 'TokenName'
-
-app
   .use(store)
   .use(router)
   .use(i18n)

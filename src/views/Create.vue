@@ -58,7 +58,7 @@
             <span v-else>{{ $d(form.end * 1e3, 'short') }}</span>
           </UiButton>
           <UiButton>
-            <input v-model="form.snapshot" class="outline-none h-6 text-center font-semibold text-main-link">
+            <input v-model="form.snapshot" class="outline-none h-6 text-center font-semibold text-main-link bg-transparent">
           </UiButton>
           <UiButton @click="publish" :disabled="!isValid">Publish</UiButton>
         </div>

@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: '16'
       - name: Build website
+        env:
+          VUE_APP_HUB_URL: ${{ secrets.VUE_APP_HUB_URL }}
+          VUE_APP_IPFS_GATEWAY: ${{ secrets.VUE_APP_IPFS_GATEWAY }}
         run: |
           yarn install
           yarn build

@@ -1,22 +1,24 @@
 <template>
   <div class="py-4 bg-main-primary text-white border-b border-main-border">
     <div class="max-w-[1012px] mx-auto flex justify-between items-center">
-      <router-link :to="{name:'Home'}" class="text-xl font-semibold">{{ $AppName }} / voting app</router-link>
+      <router-link :to="{name:'Home'}" class="text-xl font-semibold flex items-center">
+        <img src="@/assets/imgs/logo-long.png" alt="etb logo" class="w-72 mr-3">
+        / voting app</router-link>
       <div class="flex space-x-2 items-center">
         <div class="flex items-center">
           <!--          <component :is="enabled?'SunIcon':'MoonIcon'" class="h-6 w-6 mr-2" />-->
           <Switch
             v-model="enabled"
-            :class="enabled ? 'bg-gray-100' : 'bg-gray-700'"
+            :class="enabled ? 'bg-gray-100' : 'bg-gray-100'"
             class="relative inline-flex items-center h-8 rounded-full w-14 mr-4"
             @click="changeTheme(enabled)"
           >
           <span
-            :class="enabled ? 'bg-gray-900 translate-x-7' : 'bg-gray-100 translate-x-1'"
+            :class="enabled ? 'bg-gray-900 translate-x-7' : 'bg-gray-900 translate-x-1'"
             class="inline-block w-6 h-6 transform rounded-full flex transition duration-200 ease-in-out"
           >
             <component :is="enabled?'MoonIcon':'SunIcon'" class="h-4 w-4 self-center mx-auto"
-                       :class="enabled?'text-white':'text-black'"/>
+                       :class="enabled?'text-white':'text-white'"/>
           </span>
           </Switch>
         </div>
