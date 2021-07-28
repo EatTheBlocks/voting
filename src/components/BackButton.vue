@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="to" class="flex items-center font-semibold text-sm">
+  <router-link :to="to" class="flex items-center font-semibold text-sm outline-none">
     <ArrowNarrowLeftIcon class="mr-1 h-4 w-4"/>
     {{ text }}
   </router-link>
