@@ -82,12 +82,12 @@ const actions = {
       }
     })
 
-    ethereum.on('connect', (connectInfo) => {
-      if (connectInfo.chainId != networkRequired) {
-        setTimeout(() => {
-          changeNetwork()
-        }, 1000)
-      }
+    ethereum.on('connect', (/*connectInfo*/) => {
+      // if (connectInfo.chainId != networkRequired) {
+      //   setTimeout(() => {
+      //     changeNetwork()
+      //   }, 1000)
+      // }
     })
 
     ethereum.on('disconnect', async (error) => {
