@@ -17,7 +17,7 @@ type SnapshotScoreRequest struct {
 
 type SnapshotParams struct {
 	Network    string             `json:"network"`
-	Snapshot   int                `json:"snapshot"`
+	Snapshot   int64              `json:"snapshot"`
 	Strategies []SnapshotStrategy `json:"strategies"`
 	Addresses  []string           `json:"addresses"`
 }
@@ -56,17 +56,28 @@ type SnapshotScoreResponse struct {
 	} `json:"result"`
 }
 
+type ScoreRequest struct {
+	Snapshot  int64    `json:"snapshot"`
+	Addresses []string `json:"addresses"`
+}
+
 // GetScore temporary solution that use score.snapshot.org server for archive data
 func (h handler) GetScore(c echo.Context) error {
-	var scoreRequest struct {
-		Snapshot  int      `json:"snapshot"`
-		Addresses []string `json:"addresses"`
-	}
+	var scoreRequest ScoreRequest
 
 	if err := c.Bind(&scoreRequest); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
+	snapshotScoreResponse, err := getScore(scoreRequest)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, snapshotScoreResponse)
+}
+
+func getScore(scoreRequest ScoreRequest) (*SnapshotScoreResponse, error) {
 	snapshotScoreRequest := SnapshotScoreRequest{Params: SnapshotParams{
 		Network:  "56",
 		Snapshot: scoreRequest.Snapshot,
@@ -105,13 +116,13 @@ func (h handler) GetScore(c echo.Context) error {
 	jsonBody, err := json.Marshal(snapshotScoreRequest)
 	if err != nil {
 		log.Error(errors.Wrap(err, "GetScore json encode"))
-		return c.JSON(http.StatusInternalServerError, err)
+		return nil, err
 	}
 
 	req, err := http.NewRequest("POST", "https://score.snapshot.org/api/scores", bytes.NewReader(jsonBody))
 	if err != nil {
 		log.Error(errors.Wrap(err, "GetScore new request"))
-		return c.JSON(http.StatusInternalServerError, err)
+		return nil, err
 	}
 
 	req.Header.Set("authority", "score.snapshot.org")
@@ -129,7 +140,7 @@ func (h handler) GetScore(c echo.Context) error {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Error(errors.Wrap(err, "GetScore send request"))
-		return c.JSON(http.StatusInternalServerError, err)
+		return nil, err
 	}
 
 	defer resp.Body.Close()
@@ -138,8 +149,8 @@ func (h handler) GetScore(c echo.Context) error {
 	decoder := json.NewDecoder(resp.Body)
 	if err = decoder.Decode(&snapshotScoreResponse); err != nil {
 		log.Error(errors.Wrap(err, "GetScore parse json response"))
-		return c.JSON(http.StatusInternalServerError, err)
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, snapshotScoreResponse)
+	return &snapshotScoreResponse, nil
 }

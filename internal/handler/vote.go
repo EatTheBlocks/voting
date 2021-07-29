@@ -77,7 +77,17 @@ func (h handler) PostVote(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "you have already voted for this proposal")
 	}
 
-	// TODO verify user power based on proposal.snapshot
+	score, err := getScore(ScoreRequest{
+		Snapshot:  proposal.Snapshot,
+		Addresses: []string{signedVote.Vote.Author},
+	})
+	if err != nil {
+		log.Error(errors.Wrap(err, "get score"))
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	if score.Result.Scores[0][signedVote.Vote.Author] <= 0 {
+		return c.JSON(http.StatusBadRequest, "you have not enough power to vote")
+	}
 
 	hash, err := h.ipfs.PinJSON("etb/vote/"+signedVote.Vote.Proposal+"/"+signedVote.Vote.Author, signedVote)
 	if err != nil {
