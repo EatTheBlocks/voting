@@ -25,7 +25,7 @@
         </div>
         <Wallet/>
         <button
-          v-if="parseInt($store.state.web3.network, 16) != $store.state.space.network && $store.state.web3.network != $store.state.space.network"
+          v-if="(parseInt($store.state.web3.network, 16) != $store.state.space.network && $store.state.web3.network != $store.state.space.network) && $store.state.web3.network != ''"
           @click="changeNetwork"
           class="px-5 py-3 rounded-full font-semibold text-sm bg-red-500 text-white hover:bg-white hover:text-red-500">
           Incorrect Network
