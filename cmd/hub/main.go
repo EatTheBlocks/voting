@@ -41,7 +41,7 @@ func main() {
 		{"network", "56"},
 		{"admins", []string{
 			"0x4E48C12cf0ABEf413A2E8994B4A6a743C3f2d296",
-			"0x539dea3fe88d32b46dd6e07b9ad99c59e81d85be",
+			"0xb063d25968b3470F584833a9bfa1F684B9950032",
 		}},
 	})
 
