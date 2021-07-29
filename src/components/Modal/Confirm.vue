@@ -39,7 +39,9 @@ import {useStore} from 'vuex'
 import {useRouter} from 'vue-router'
 import {ExternalLinkIcon} from '@heroicons/vue/outline'
 import axios from 'axios'
-import {provider} from '@/store/modules/web3'
+//import {provider} from '@/store/modules/web3'
+import {hexlify} from '@ethersproject/bytes'
+import {ethers} from 'ethers'
 
 export default {
   name: 'Confirm',
@@ -87,8 +89,11 @@ export default {
         timestamp: Date.now(),
       }
 
-      const signer = provider.getSigner()
-      const signature = await signer.signMessage(JSON.stringify(vote))
+      //const signer = provider.getSigner()
+      //const signature = await signer.signMessage(JSON.stringify(vote))
+
+      const msg = hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(vote)));
+      const signature = await window.ethereum.send('personal_sign', [msg, address.value])
 
       axios.post(`${process.env.VUE_APP_HUB_URL}/vote`, {
         signature: signature,
