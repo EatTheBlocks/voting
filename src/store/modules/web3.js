@@ -1,7 +1,5 @@
 import {ethers} from 'ethers'
 
-const networkRequired = 56
-
 export const provider = new ethers.providers.Web3Provider(window.ethereum)
 
 export function changeNetwork() {
@@ -62,12 +60,13 @@ const actions = {
 
     ethereum.on('chainChanged', (chainId) => {
       commit('network', chainId)
-
-      if (chainId != networkRequired) {
-        setTimeout(() => {
-          changeNetwork()
-        }, 1000)
-      }
+      //
+      // if (chainId != networkRequired) {
+      //   setTimeout(() => {
+      //     changeNetwork()
+      //   }, 1000)
+      // }
+      window.location.reload()
     })
 
     ethereum.on('accountsChanged', async (accounts) => {

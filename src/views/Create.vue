@@ -171,6 +171,11 @@ export default {
     }
 
     onMounted(async () => {
+      setInterval(async () => {
+        if (form.value.snapshot == 0) {
+          form.value.snapshot = await provider.getBlockNumber()
+        }
+      }, 1000)
       form.value.snapshot = await provider.getBlockNumber()
     })
 
