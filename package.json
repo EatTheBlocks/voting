@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
-    "serve": "TAILWIND_MODE=watch vue-cli-service serve",
+    "serve": "cross-env TAILWIND_MODE=watch vue-cli-service serve",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -52,7 +52,8 @@
     "postcss": "^8.3.5",
     "postcss-loader": "^6.1.0",
     "vue-cli-plugin-svg-vue3": "^0.0.1",
-    "vue-loader-v16": "^16.0.0-beta.5.4"
+    "vue-loader-v16": "^16.0.0-beta.5.4",
+    "cross-env": "^7.0.3"
   },
   "eslintConfig": {
     "root": true,
