@@ -1,11 +1,39 @@
 import {ethers} from 'ethers'
 
-export const provider = new ethers.providers.Web3Provider(window.ethereum)
+import Web3Modal from 'web3modal'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      rpc: {
+        56: 'https://bsc-dataseed.binance.org/',
+      },
+    }
+  },
+}
+
+export const web3Modal = new Web3Modal({
+  network: "mainnet",
+  cacheProvider: true,
+  providerOptions,
+  theme: {
+    background: "var(--main-bg)",
+    main: "var(--main-text)",
+    secondary: "var(--main-link)",
+    border: "var(--main-border)",
+    hover: "var(--main-hover)"
+  }
+})
+
+export let provider = null
+export let web3Provider = null
 
 export function changeNetwork() {
-  if (!window.ethereum) return
+  if (!web3Provider) return
 
-  window.ethereum.request({
+  web3Provider.request({
     method: "wallet_addEthereumChain",
     params: [
       {
@@ -37,30 +65,11 @@ const getters = {}
 
 // actions
 const actions = {
-  async connect({commit}) {
-    await provider.send("eth_requestAccounts", [])
-    const signer = provider.getSigner()
-    const network = await provider.getNetwork()
-    commit('address', await signer.getAddress())
-    commit('network', network.chainId)
-    commit('connected', true)
-  },
+  async connect({commit,dispatch}) {
+    web3Provider = await web3Modal.connect()
 
-  logout({commit}) {
-    commit('address', '')
-    commit('error', '')
-    commit('network', '')
-    commit('ens', '')
-    commit('connected', false)
-  },
-
-  init({commit, dispatch}) {
-    const ethereum = window.ethereum
-    if (!ethereum) return
-
-    ethereum.on('chainChanged', (chainId) => {
+    web3Provider.on('chainChanged', (chainId) => {
       commit('network', chainId)
-      //
       // if (chainId != networkRequired) {
       //   setTimeout(() => {
       //     changeNetwork()
@@ -69,7 +78,7 @@ const actions = {
       window.location.reload()
     })
 
-    ethereum.on('accountsChanged', async (accounts) => {
+    web3Provider.on('accountsChanged', async (accounts) => {
       if (accounts.length === 0) {
         dispatch('logout')
       } else {
@@ -81,7 +90,7 @@ const actions = {
       }
     })
 
-    ethereum.on('connect', (/*connectInfo*/) => {
+    web3Provider.on('connect', (/*connectInfo*/) => {
       // if (connectInfo.chainId != networkRequired) {
       //   setTimeout(() => {
       //     changeNetwork()
@@ -89,10 +98,31 @@ const actions = {
       // }
     })
 
-    ethereum.on('disconnect', async (error) => {
+    web3Provider.on('disconnect', async (error) => {
       console.error(error)
       dispatch('logout')
     })
+
+    provider = new ethers.providers.Web3Provider(web3Provider);
+    const signer = provider.getSigner()
+    const network = await provider.getNetwork()
+    commit('address', await signer.getAddress())
+    commit('network', network.chainId)
+    commit('connected', true)
+  },
+
+  logout({commit}) {
+    web3Modal.clearCachedProvider()
+    commit('address', '')
+    commit('error', '')
+    commit('network', '')
+    commit('ens', '')
+    commit('connected', false)
+  },
+  init({dispatch}) {
+    if (web3Modal.cachedProvider) {
+      dispatch('connect')
+    }
   }
 }
 

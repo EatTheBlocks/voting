@@ -1,7 +1,7 @@
 <template>
   <button
     class="border border-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-white hover:text-main-primary"
-    @click="modalAccountOpen = true"
+    @click="!connected? $store.dispatch('web3/connect') : modalAccountOpen = true"
   >
     <span v-if="!connected">Connect Wallet</span>
     <User :address="address" :popover="false" v-else/>
