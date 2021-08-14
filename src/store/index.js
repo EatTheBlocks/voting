@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
 import VuexPersistence from "vuex-persist";
-import web3 from './modules/web3'
+import web3, {defaultProvider} from './modules/web3'
 
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage
@@ -17,6 +17,7 @@ export default createStore({
       admins: [],
     },
     notifs: [],
+    ens: {},
   },
   mutations: {
     changeTheme(state, darkMode) {
@@ -38,6 +39,9 @@ export default createStore({
     },
     emptyNotifs(state) {
       state.notifs = []
+    },
+    saveENS(state, payload) {
+      state.ens[payload[0]] = payload[1]
     }
   },
   actions: {
@@ -45,6 +49,17 @@ export default createStore({
       Array.isArray(payload)
         ? commit('notify', {message: payload[0], color: payload[1]})
         : commit('notify', {message: payload, color: 'bg-green-500'});
+    },
+    async getENS({commit}, payload) {
+      const ensName = await defaultProvider.lookupAddress(payload)
+      if (ensName) {
+        const ensAddr = await defaultProvider.resolveName(ensName)
+        if (ensAddr.toLowerCase() === payload.toLowerCase()) {
+          commit('saveENS', [payload.toLowerCase(), ensName])
+          return
+        }
+      }
+      commit('saveENS', [payload.toLowerCase(), ''])
     }
   },
   modules: {

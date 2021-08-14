@@ -1,7 +1,8 @@
 import {ethers} from 'ethers'
-
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+
+export const defaultProvider = ethers.getDefaultProvider()
 
 const providerOptions = {
   walletconnect: {
@@ -65,7 +66,7 @@ const getters = {}
 
 // actions
 const actions = {
-  async connect({commit,dispatch}) {
+  async connect({commit, dispatch}) {
     web3Provider = await web3Modal.connect()
 
     web3Provider.on('chainChanged', (chainId) => {
@@ -106,7 +107,8 @@ const actions = {
     provider = new ethers.providers.Web3Provider(web3Provider);
     const signer = provider.getSigner()
     const network = await provider.getNetwork()
-    commit('address', await signer.getAddress())
+    const address = await signer.getAddress()
+    commit('address', address)
     commit('network', network.chainId)
     commit('connected', true)
   },
