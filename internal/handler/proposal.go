@@ -19,10 +19,10 @@ type Proposal struct {
 	Title    string   `json:"title"`
 	Body     string   `json:"body"`
 	Choices  []string `json:"choices"`
-	Created  int64    `json:"created"`
-	Start    int64    `json:"start"`
-	End      int64    `json:"end"`
-	Snapshot int64    `json:"snapshot"`
+	Created  uint64   `json:"created"`
+	Start    uint64   `json:"start"`
+	End      uint64   `json:"end"`
+	Snapshot uint64   `json:"snapshot"`
 }
 
 type SignedProposalIFPS struct {
@@ -70,7 +70,7 @@ func (h handler) PostProposal(c echo.Context) error {
 	}
 
 	name := slug.MakeLang(signedProposal.Proposal.Title, "en")
-	hash, err := h.ipfs.PinJSON("etb/proposal/"+strconv.FormatInt(signedProposal.Proposal.Created, 10)+"-"+name, signedProposal)
+	hash, err := h.ipfs.PinJSON("etb/proposal/"+strconv.FormatUint(signedProposal.Proposal.Created, 10)+"-"+name, signedProposal)
 	if err != nil {
 		log.Error(errors.Wrap(err, "PostProposal ipfs pin proposal"))
 		return c.JSON(http.StatusInternalServerError, err)

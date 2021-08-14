@@ -65,7 +65,7 @@ func (h handler) PostVote(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 
-	if time.Now().Unix() > proposal.End {
+	if uint64(time.Now().Unix()) > proposal.End {
 		return c.JSON(http.StatusBadRequest, "proposal closed")
 	}
 
@@ -77,7 +77,7 @@ func (h handler) PostVote(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "you have already voted for this proposal")
 	}
 
-	score, err := getScore(ScoreRequest{
+	score, err := getScore(h.rpcApi, h.multicallAddress, h.tokenAddress, ScoreRequest{
 		Snapshot:  proposal.Snapshot,
 		Addresses: []string{signedVote.Vote.Author},
 	})
@@ -85,7 +85,7 @@ func (h handler) PostVote(c echo.Context) error {
 		log.Error(errors.Wrap(err, "get score"))
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-	if score.Result.Scores[0][signedVote.Vote.Author] <= 0 {
+	if score.Scores[signedVote.Vote.Author] <= 0 {
 		return c.JSON(http.StatusBadRequest, "you have not enough power to vote")
 	}
 
