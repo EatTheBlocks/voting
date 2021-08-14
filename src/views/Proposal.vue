@@ -126,7 +126,7 @@ export default {
         })
 
         votes.value = votes.value.map(vote => {
-          vote.balance = responseScore.data.result.scores[0][vote.author] || 0
+          vote.balance = responseScore.data.scores[vote.author] || 0
           return vote
         })
           .sort((a, b) => b.balance - a.balance)
