@@ -172,11 +172,19 @@ export default {
 
     onMounted(async () => {
       setInterval(async () => {
-        if (form.value.snapshot == 0) {
-          form.value.snapshot = await provider.getBlockNumber()
+        try {
+          if (form.value.snapshot === 0) {
+            form.value.snapshot = await provider.getBlockNumber()
+          }
+          // eslint-disable-next-line
+        } catch (e) {
         }
       }, 1000)
-      form.value.snapshot = await provider.getBlockNumber()
+      try {
+        form.value.snapshot = await provider.getBlockNumber()
+        // eslint-disable-next-line
+      } catch (e) {
+      }
     })
 
     return {
