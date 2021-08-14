@@ -74,7 +74,7 @@ export default {
         addresses: [address.value],
       })
 
-      power.value = response.data.result.scores[0][address.value]
+      power.value = response.data.scores[address.value]
     }
 
     const canVote = computed(() => {
