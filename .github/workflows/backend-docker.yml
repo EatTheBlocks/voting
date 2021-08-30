@@ -4,10 +4,6 @@ on:
   push:
     branches: [ main ]
 
-defaults:
-  run:
-    working-directory: backend
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,8 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./backend
           platforms: ${{ env.DOCKER_TARGET_PLATFORM }}
           push: true
           tags: |
@@ -47,6 +42,6 @@ jobs:
             "ETB_TOKEN_ADDRESS=${{ secrets.ETB_TOKEN_ADDRESS }}"
             "MONGO_URI=${{ secrets.MONGO_URI }}"
             "MULTICALL_ADDRESS=${{ secrets.MULTICALL_ADDRESS }}"
-            "PINATA_API_KEY=${{ secrets.PINATA_API_KEY }}"
-            "PINATA_SECRET_KEY=${{ secrets.PINATA_SECRET_KEY }}"
+            "PINATA_API_KEY=${{ secrets.PINATA_API }}"
+            "PINATA_SECRET_KEY=${{ secrets.PINATA_SECRET }}"
             "RPC_API=${{ secrets.RPC_API }}"
