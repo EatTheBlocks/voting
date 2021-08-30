@@ -5,7 +5,6 @@ go 1.16
 require (
 	github.com/ethereum/go-ethereum v1.10.7
 	github.com/gosimple/slug v1.10.0
-	github.com/ijustfool/docker-secrets v0.0.0-20191021062307-b25ea5007562
 	github.com/jarcoal/httpmock v1.0.8 // indirect
 	github.com/labstack/echo/v4 v4.4.0
 	github.com/onrik/ethrpc v1.0.0

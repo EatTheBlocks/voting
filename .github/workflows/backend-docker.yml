@@ -37,11 +37,3 @@ jobs:
           tags: |
             ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
-          secrets: |
-            "ADMIN_LIST=${{ secrets.ADMIN_LIST }}"
-            "ETB_TOKEN_ADDRESS=${{ secrets.ETB_TOKEN_ADDRESS }}"
-            "MONGO_URI=${{ secrets.MONGO_URI }}"
-            "MULTICALL_ADDRESS=${{ secrets.MULTICALL_ADDRESS }}"
-            "PINATA_API_KEY=${{ secrets.PINATA_API }}"
-            "PINATA_SECRET_KEY=${{ secrets.PINATA_SECRET }}"
-            "RPC_API=${{ secrets.RPC_API }}"

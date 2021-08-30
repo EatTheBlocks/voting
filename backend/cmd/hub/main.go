@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ijustfool/docker-secrets"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
@@ -16,19 +15,17 @@ import (
 )
 
 func main() {
-	dockerSecrets, _ := secrets.NewDockerSecrets("")
-
 	log.Info("starting ETB voting hub")
 
 	ctx := context.Background()
 
-	mongoURI, _ := dockerSecrets.Get("MONGO_URI")
-	pinataApiKey, _ := dockerSecrets.Get("PINATA_API_KEY")
-	pinataSecretKey, _ := dockerSecrets.Get("PINATA_SECRET_KEY")
-	rpcApi, _ := dockerSecrets.Get("RPC_API")
-	multicallAddress, _ := dockerSecrets.Get("MULTICALL_ADDRESS")
-	ETBTokenAddress, _ := dockerSecrets.Get("ETB_TOKEN_ADDRESS")
-	adminList, _ := dockerSecrets.Get("ADMIN_LIST")
+	mongoURI := os.Getenv("MONGO_URI")
+	pinataApiKey := os.Getenv("PINATA_API_KEY")
+	pinataSecretKey := os.Getenv("PINATA_SECRET_KEY")
+	rpcApi := os.Getenv("RPC_API")
+	multicallAddress := os.Getenv("MULTICALL_ADDRESS")
+	ETBTokenAddress := os.Getenv("ETB_TOKEN_ADDRESS")
+	adminList := os.Getenv("ADMIN_LIST")
 	port := os.Getenv("PORT")
 
 	if port == "" {
