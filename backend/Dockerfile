@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine AS builder
+FROM golang:1.17-alpine AS builder
 RUN apk add gcc g++ git libc-dev make
 WORKDIR /app
 COPY . .

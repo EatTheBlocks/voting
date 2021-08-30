@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ijustfool/docker-secrets"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
@@ -15,17 +16,24 @@ import (
 )
 
 func main() {
+	dockerSecrets, _ := secrets.NewDockerSecrets("")
+
+	log.Info("starting ETB voting hub")
+
 	ctx := context.Background()
 
-	mongoURI := os.Getenv("MONGO_URI")
-	pinataApiKey := os.Getenv("PINATA_API_KEY")
-	pinataSecretKey := os.Getenv("PINATA_SECRET_KEY")
-	rpcApi := os.Getenv("RPC_API")
-	multicallAddress := os.Getenv("MULTICALL_ADDRESS")
-	ETBTokenAddress := os.Getenv("ETB_TOKEN_ADDRESS")
-	adminList := os.Getenv("ADMIN_LIST")
+	mongoURI, _ := dockerSecrets.Get("MONGO_URI")
+	pinataApiKey, _ := dockerSecrets.Get("PINATA_API_KEY")
+	pinataSecretKey, _ := dockerSecrets.Get("PINATA_SECRET_KEY")
+	rpcApi, _ := dockerSecrets.Get("RPC_API")
+	multicallAddress, _ := dockerSecrets.Get("MULTICALL_ADDRESS")
+	ETBTokenAddress, _ := dockerSecrets.Get("ETB_TOKEN_ADDRESS")
+	adminList, _ := dockerSecrets.Get("ADMIN_LIST")
+	port := os.Getenv("PORT")
 
-	//RPC_API=https://apis.ankr.com/c0d871dd3c6d4529b01c9362a9b79e89/6106d4a3ec1d1bcc87ec72158f8fd089/binance/archive/main;MULTICALL_ADDRESS=0x1ee38d535d541c55c9dae27b12edf090c608e6fb;ETB_TOKEN_ADDRESS=0x7ac64008fa000bfdc4494e0bfcc9f4eff3d51d2a;ADMIN_LIST=0x4E48C12cf0ABEf413A2E8994B4A6a743C3f2d296,0xb063d25968b3470F584833a9bfa1F684B9950032,0x539dea3fe88d32b46dd6e07b9ad99c59e81d85be
+	if port == "" {
+		port = "80"
+	}
 
 	dbConn, err := db.NewClient(ctx, db.Options{URI: mongoURI})
 	if err != nil {
@@ -65,5 +73,7 @@ func main() {
 	e.POST("/vote", h.PostVote)
 	e.POST("/score", h.GetScore)
 
-	log.Fatalf("server start: %v", e.Start(":80"))
+	log.Infof("server start on port %s", port)
+
+	log.Fatalf("server start: %v", e.Start(":"+port))
 }
