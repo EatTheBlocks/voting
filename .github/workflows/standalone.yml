@@ -31,6 +31,7 @@ jobs:
 
   build-back:
     name: Build backend
+    needs: build-front
     runs-on: ubuntu-latest
     env:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
