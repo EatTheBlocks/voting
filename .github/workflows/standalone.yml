@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v2
         with:
           key: ${{ github.sha }}
-          path: dist
+          path: frontend/dist
 
   build-back:
     name: Build backend
@@ -57,11 +57,11 @@ jobs:
       - name: Get frontend from cache
         uses: actions/cache@v2
         with:
-          path: dist
+          path: frontend/dist
           key: ${{ github.sha }}
       - name: Move frontend dist
         run: |
-          mv dist backend/static
+          mv frontend/dist backend/static
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
