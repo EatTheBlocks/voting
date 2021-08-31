@@ -7,4 +7,5 @@ RUN go build -o hub  ./cmd/hub
 
 FROM alpine
 COPY --from=builder /app/hub /hub
+COPY static /static
 ENTRYPOINT ["/hub"]

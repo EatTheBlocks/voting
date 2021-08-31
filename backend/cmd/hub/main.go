@@ -61,14 +61,17 @@ func main() {
 
 	e.Use(middleware.CORS())
 
+	e.Static("/", "static")
+
 	h := handler.NewHandler(dbConn, pinata, rpcApi, multicallAddress, ETBTokenAddress)
 
-	e.GET("/", h.GetSpace)
-	e.POST("/proposal", h.PostProposal)
-	e.GET("/proposals", h.GetProposals)
-	e.GET("/proposal/:id", h.GetProposal)
-	e.POST("/vote", h.PostVote)
-	e.POST("/score", h.GetScore)
+	api := e.Group("/api")
+	api.GET("/", h.GetSpace)
+	api.POST("/proposal", h.PostProposal)
+	api.GET("/proposals", h.GetProposals)
+	api.GET("/proposal/:id", h.GetProposal)
+	api.POST("/vote", h.PostVote)
+	api.POST("/score", h.GetScore)
 
 	log.Infof("server start on port %s", port)
 

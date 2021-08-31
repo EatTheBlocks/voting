@@ -1,11 +1,36 @@
-name: Docker Image CI
+name: Standalone Mode
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  build-front:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup node verison
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - name: Build website
+        working-directory: frontend
+        env:
+          VUE_APP_HUB_URL: ${{ secrets.VUE_APP_HUB_URL }}
+          VUE_APP_IPFS_GATEWAY: ${{ secrets.VUE_APP_IPFS_GATEWAY }}
+        run: |
+          yarn install
+          yarn build
+      - name: Cache result
+        uses: actions/cache@v2
+        with:
+          key: ${{ github.sha }}
+          path: dist
+
+  build-back:
+    name: Build backend
     runs-on: ubuntu-latest
     env:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
@@ -28,6 +53,14 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - name: Docker login DigitalOcean
         run: doctl registry login --expiry-seconds 600
+      - name: Get frontend from cache
+        uses: actions/cache@v2
+        with:
+          path: dist
+          key: ${{ github.sha }}
+      - name: Move frontend dist
+        run: |
+          mv dist backend/static
       - name: Build and push
         uses: docker/build-push-action@v2
         with:

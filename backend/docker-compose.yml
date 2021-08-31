@@ -2,10 +2,12 @@ version: '3.7'
 
 services:
   hub:
-    build: .
+    image: registry.digitalocean.com/REGISTRY_NAME/hub:latest
     restart: always
     env_file:
       - prod.env
+    environment:
+      - MONGO_URI=mongodb://root:toor@mongo:27017
     ports:
       - "80:80"
 
@@ -15,13 +17,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: toor
-#    ports:
-#      - "27017:27017"
     volumes:
       - "./data:/data/db"
 
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 1
+#  watchtower:
+#    image: containrrr/watchtower
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - /root/.docker/config.json:/config.json
+#    command: --interval 1
