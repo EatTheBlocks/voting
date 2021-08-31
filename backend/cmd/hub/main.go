@@ -45,13 +45,16 @@ func main() {
 	// Replace space with last info
 	collection := dbConn.Client().Database("etb-voting-app").Collection("space")
 	_, _ = collection.DeleteMany(ctx, bson.D{})
-	_, _ = collection.InsertOne(ctx, bson.D{
+	_, err = collection.InsertOne(ctx, bson.D{
 		{"name", "Eat The Blocks"},
 		{"token", "ETB"},
 		{"address", ETBTokenAddress},
 		{"network", "56"},
 		{"admins", strings.Split(adminList, ",")},
 	})
+	if err != nil {
+		log.Warn(err)
+	}
 
 	pinata := ipfs.NewPinataClient(pinataApiKey, pinataSecretKey)
 
@@ -66,7 +69,7 @@ func main() {
 	h := handler.NewHandler(dbConn, pinata, rpcApi, multicallAddress, ETBTokenAddress)
 
 	api := e.Group("/api")
-	api.GET("/", h.GetSpace)
+	api.GET("", h.GetSpace)
 	api.POST("/proposal", h.PostProposal)
 	api.GET("/proposals", h.GetProposals)
 	api.GET("/proposal/:id", h.GetProposal)
