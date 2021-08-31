@@ -9,9 +9,9 @@ import camelCase from 'lodash/camelCase'
 import './assets/css/index.styl'
 import 'tailwindcss/tailwind.css'
 
-if (process.env.NODE_ENV === 'production' && location.protocol !== 'https:') {
-  location.replace(`https:${location.href.substring(location.protocol.length)}`);
-}
+// if (process.env.NODE_ENV === 'production' && location.protocol !== 'https:') {
+//   location.replace(`https:${location.href.substring(location.protocol.length)}`);
+// }
 
 const app = createApp(App)
   .use(store)
