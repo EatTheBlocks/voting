@@ -93,7 +93,11 @@ export default {
       //const signature = await signer.signMessage(JSON.stringify(vote))
 
       const msg = hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(vote)));
-      const signature = await window.ethereum.send('personal_sign', [msg, address.value])
+      let signature = await window.ethereum.send('personal_sign', [msg, address.value])
+
+      if (typeof signature === 'object' && signature !== null && Object.prototype.hasOwnProperty.call(signature, 'result')) {
+        signature = signature.result
+      }
 
       axios.post(`${process.env.VUE_APP_HUB_URL}/vote`, {
         signature: signature,
@@ -103,7 +107,7 @@ export default {
         emit('close')
         emit('voted')
       }).catch((error) => {
-        store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
+        store.dispatch('notify', ["Oops, " + error.response.data.message, 'bg-red-500'])
         console.error(error)
         emit('close')
       })
