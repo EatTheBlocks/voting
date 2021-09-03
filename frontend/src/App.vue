@@ -30,7 +30,7 @@ export default {
         const response = await axios.get(`${process.env.VUE_APP_HUB_URL}`)
         store.commit('setSpace', response.data)
       } catch (error) {
-        await store.dispatch('notify', ["Oops, " + error.response.data, 'bg-red-500'])
+        await store.dispatch('notify', ["Oops, " + error.response.data.message, 'bg-red-500'])
         loadError.value = error
       }
     }
