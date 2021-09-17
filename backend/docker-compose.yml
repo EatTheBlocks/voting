@@ -2,7 +2,8 @@ version: '3.7'
 
 services:
   hub:
-    image: registry.digitalocean.com/REGISTRY_NAME/hub:latest
+#    image: registry.digitalocean.com/REGISTRY_NAME/hub:latest
+    build: .
     restart: always
     env_file:
       - prod.env
@@ -10,6 +11,8 @@ services:
       - MONGO_URI=mongodb://root:toor@mongo:27017
     ports:
       - "80:80"
+    volumes:
+      - "./cache:/cache"
 
   mongo:
     image: mongo
