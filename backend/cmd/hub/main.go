@@ -30,6 +30,8 @@ func main() {
 	email := os.Getenv("EMAIL")
 	domain := os.Getenv("DOMAIN")
 
+	httpsEnabled := len(email) > 0 && len(domain) > 0
+
 	dbConn, err := db.NewClient(ctx, db.Options{URI: mongoURI})
 	if err != nil {
 		log.Fatalf("db connect: %v", err)
@@ -60,11 +62,13 @@ func main() {
 	e.HideBanner = true
 	e.HidePort = true
 
-	e.AutoTLSManager.Email = email
-	e.AutoTLSManager.HostPolicy = autocert.HostWhitelist(domain)
-	e.AutoTLSManager.Cache = autocert.DirCache("/cache")
+	if httpsEnabled {
+		e.AutoTLSManager.Email = email
+		e.AutoTLSManager.HostPolicy = autocert.HostWhitelist(domain)
+		e.AutoTLSManager.Cache = autocert.DirCache("/cache")
+		e.Pre(middleware.HTTPSRedirect())
+	}
 
-	e.Pre(middleware.HTTPSRedirect())
 	e.Use(middleware.CORS())
 
 	e.Static("/", "static")
@@ -79,11 +83,17 @@ func main() {
 	api.POST("/vote", h.PostVote)
 	api.POST("/score", h.GetScore)
 
-	log.Info("server start on port 80 and 443")
+	if httpsEnabled {
+		log.Info("server start on port 80 and 443")
 
-	go func() {
-		log.Errorf("server start: %v", e.Start(":80"))
-	}()
+		go func() {
+			log.Errorf("server start: %v", e.Start(":80"))
+		}()
 
-	log.Fatalf("server start: %v", e.StartAutoTLS(":443"))
+		log.Fatalf("server start: %v", e.StartAutoTLS(":443"))
+	} else {
+		log.Info("server start on port 80")
+		log.Fatalf("server start: %v", e.Start(":80"))
+	}
+
 }

@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   hub:
-#    image: registry.digitalocean.com/REGISTRY_NAME/hub:latest
-    build: .
+    image: registry.digitalocean.com/REGISTRY_NAME/hub:latest
+#    build: .
     restart: always
     env_file:
       - prod.env
