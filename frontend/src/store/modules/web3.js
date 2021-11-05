@@ -2,12 +2,13 @@ import {ethers} from 'ethers'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
-export const defaultProvider = ethers.getDefaultProvider()
+export const defaultProvider = new ethers.providers.InfuraProvider(null, process.env.VUE_APP_INFURA_ID);
 
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
+      infuraId: process.env.VUE_APP_INFURA_ID,
       rpc: {
         56: 'https://bsc-dataseed.binance.org/',
       },
@@ -115,6 +116,7 @@ const actions = {
 
   logout({commit}) {
     web3Modal.clearCachedProvider()
+    localStorage.removeItem('walletconnect')
     commit('address', '')
     commit('error', '')
     commit('network', '')
